@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploader", "FileUploader\FileUploader.csproj", "{517D460F-6E20-4ECC-BC28-1A102B7F10A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadListener", "FileUploadListener\FileUploadListener.csproj", "{03BE9891-4C90-4C00-BD75-B8B69E107AAB}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}"
 EndProject
 Global
@@ -17,6 +19,10 @@ Global
 		{517D460F-6E20-4ECC-BC28-1A102B7F10A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517D460F-6E20-4ECC-BC28-1A102B7F10A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{517D460F-6E20-4ECC-BC28-1A102B7F10A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03BE9891-4C90-4C00-BD75-B8B69E107AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03BE9891-4C90-4C00-BD75-B8B69E107AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03BE9891-4C90-4C00-BD75-B8B69E107AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03BE9891-4C90-4C00-BD75-B8B69E107AAB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
