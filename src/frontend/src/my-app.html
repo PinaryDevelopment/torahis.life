@@ -1,0 +1,29 @@
+<header>
+    <h1>TorahIs.Life</h1>
+</header>
+
+<main>
+    <div class="card" repeat.for="shiur of shiurim">
+        <span class="inner-border"></span>
+        <h3>${shiur.subseries} - ${shiur.title}</h3>
+        <h5>
+            <a repeat.for="version of shiur.versions" click.delegate="openDialog(shiur, version)" href="javascript:void(0)">${version.name} (${version.duration})</a>
+        </h5>
+        <div>${shiur.author}</div>
+    </div>
+</main>
+
+<div class="faux-dialog" if.bind="selectedShiur">
+    <div click.delegate="closeDialog()">X</div>
+    <figure>
+        <figcaption>${selectedShiur.subseries} - ${selectedShiur.title} ${selectedVersion.name}. Given by ${selectedShiur.author}.</figcaption>
+        <audio controls src="https://torahislife.azurewebsites.net/api/ShiurRetriever?name=${selectedShiur.getVersionLocation(selectedVersion)}">
+                Your browser does not support the<code>audio</code> element.
+        </audio>
+        <!-- <audio controls src="http://localhost:7071/api/ShiurRetriever?name=${selectedShiur.getVersionLocation(selectedVersion)}">
+            Your browser does not support the<code>audio</code> element.
+        </audio> -->
+    </figure>
+</div>
+
+<footer>Powered by Pinary Development LLC © ${copyrightYears}</footer>
