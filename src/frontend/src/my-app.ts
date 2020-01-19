@@ -38,4 +38,8 @@ export class MyApp {
 
     return `${firstYear} - ${currentYear}`;
   }
+
+  public downloadShiur(shiur: Shiur, version: Version) {
+    window.location.href = `https://torahislife.azurewebsites.net/api/ShiurRetriever?name=${shiur.getVersionLocation(version)}`;
+  }
 }

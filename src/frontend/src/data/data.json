@@ -93,7 +93,8 @@
             "subseries": "Berachos",
             "title": "Daf 10",
             "versions": [
-                { "name": "with Rashi", "duration": "47:39" }
+                { "name": "with Rashi", "duration": "47:39" },
+                { "name": "without Rashi", "duration": "32:05" }
             ]
         },
         {
@@ -103,7 +104,8 @@
             "subseries": "Berachos",
             "title": "Daf 11",
             "versions": [
-                { "name": "with Rashi", "duration": "51:50" }
+                { "name": "with Rashi", "duration": "51:50" },
+                { "name": "without Rashi", "duration": "30:52" }
             ]
         },
         {
@@ -113,7 +115,8 @@
             "subseries": "Berachos",
             "title": "Daf 12",
             "versions": [
-                { "name": "with Rashi", "duration": "49:15" }
+                { "name": "with Rashi", "duration": "49:15" },
+                { "name": "without Rashi", "duration": "29:29" }
             ]
         },
         {
@@ -123,7 +126,8 @@
             "subseries": "Berachos",
             "title": "Daf 13",
             "versions": [
-                { "name": "with Rashi", "duration": "45:39" }
+                { "name": "with Rashi", "duration": "45:39" },
+                { "name": "without Rashi", "duration": "24:44" }
             ]
         },
         {
@@ -134,6 +138,26 @@
             "title": "Daf 14",
             "versions": [
                 { "name": "with Rashi", "duration": "43:04" }
+            ]
+        },
+        {
+            "author": "Rabbi Yosef Bromberg",
+            "date": "Jan 18 2020",
+            "series": "Daf Yomi",
+            "subseries": "Berachos",
+            "title": "Daf 15",
+            "versions": [
+                { "name": "with Rashi", "duration": "42:34" }
+            ]
+        },
+        {
+            "author": "Rabbi Yosef Bromberg",
+            "date": "Jan 19 2020",
+            "series": "Daf Yomi",
+            "subseries": "Berachos",
+            "title": "Daf 16",
+            "versions": [
+                { "name": "with Rashi", "duration": "47:40" }
             ]
         }
     ]

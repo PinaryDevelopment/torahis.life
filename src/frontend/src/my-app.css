@@ -44,23 +44,11 @@ footer {
 }
 
 main {
-  display: flex;
-  flex-direction: row-reverse;
   flex-grow: 1;
-  justify-content: flex-end;
   margin: 0;
   overflow-x: auto;
   padding: 1.75em 1em .75em 0;
   width: 100vw;
-  /* direction: rtl;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  justify-content: flex-start;
-  margin: 0;
-  overflow-x: auto;
-  padding: 1.75em 1em .75em 0;
-  width: 100vw; */
 }
 
 .card:not(:last-of-type) {
@@ -124,12 +112,21 @@ main {
   flex-direction: column;
 }
 
-.card>h5>a {
+.card>h5 a {
   color: #000;
 }
 
-.card>h5>a:hover {
+.card>h5 a:hover {
   color: #38362f;
+}
+
+.card>h5 button {
+  font-weight: 900;
+  border: 0;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
 }
 
 .card:hover>h5 {
@@ -177,7 +174,11 @@ main>h4 {
   writing-mode: sideways-lr;
 }
 
-
+.wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
 
 
 

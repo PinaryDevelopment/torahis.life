@@ -3,13 +3,18 @@
 </header>
 
 <main>
-    <div class="card" repeat.for="shiur of shiurim">
-        <span class="inner-border"></span>
-        <h3>${shiur.subseries} - ${shiur.title}</h3>
-        <h5>
-            <a repeat.for="version of shiur.versions" click.delegate="openDialog(shiur, version)" href="javascript:void(0)">${version.name} (${version.duration})</a>
-        </h5>
-        <div>${shiur.author}</div>
+    <div class="wrapper">
+        <div class="card" repeat.for="shiur of shiurim">
+            <span class="inner-border"></span>
+            <h3>${shiur.subseries} - ${shiur.title}</h3>
+            <h5>
+                <div repeat.for="version of shiur.versions">
+                    <a click.delegate="openDialog(shiur, version)" href="javascript:void(0)">${version.name} (${version.duration})</a>
+                    <button type="button" title="Download the shiur" click.delegate="downloadShiur(shiur, version)">&#x21A7;</button>
+                </div>
+            </h5>
+            <div>${shiur.author}</div>
+        </div>
     </div>
 </main>
 
