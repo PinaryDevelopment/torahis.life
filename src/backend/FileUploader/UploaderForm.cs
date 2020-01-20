@@ -37,7 +37,7 @@ namespace FileUploader
                                                         string.Join(" - ", shiur.Groups) == Controls.Find<ComboBox>(TitleInputKey).SelectedItem.ToString()
                                                         && shiur.Version == Controls.Find<ComboBox>(SubtitleInputKey).SelectedItem.ToString().Replace("(no subtitle)", string.Empty));
 
-                    var cloudBlobClient = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["AzureStorage"].ConnectionString).CreateCloudBlobClient();
+                    var cloudBlobClient = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["AzureWebJobsStorage"].ConnectionString).CreateCloudBlobClient();
                     var containerReference = cloudBlobClient.GetContainerReference(StaticData.ShiurimContainerName);
                     containerReference.CreateIfNotExistsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 

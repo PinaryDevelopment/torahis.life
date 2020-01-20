@@ -1,11 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Data
 {
     public static class StaticData
     {
-        public const string ShiurimContainerName = "shiurim"; 
-        public const string UploadedFileRootContainerPath = "src"; 
+        public const string ShiurimContainerName = "shiurim";
+        public const string UploadedFileRootContainerPath = "src";
+
+        public static readonly DateTime DafYomiCycleStartDate = new DateTime(2020, 1, 5);
 
         public static readonly MasechtaMetadata[] Masechtos = new[]
         {
@@ -95,5 +98,29 @@ namespace Data
                                 .ToArray()
             }
         };
+
+        public static (string Masechta, int Daf) CalculateDafForDate(DateTime date)
+        {
+            var daysFromCycleStart = (date.Date - DafYomiCycleStartDate.Date).TotalDays;
+            var masechtaIndex = 0;
+            while (daysFromCycleStart >= 0)
+            {
+                var masechta = Masechtos[masechtaIndex];
+                if (masechta.DafimInMasechta > daysFromCycleStart)
+                {
+                    return (masechta.Title, Convert.ToInt32(daysFromCycleStart) + 2);
+                }
+
+                daysFromCycleStart -= masechta.DafimInMasechta;
+                masechtaIndex++;
+
+                if (masechtaIndex == Masechtos.Length)
+                {
+                    masechtaIndex = 0;
+                }
+            }
+
+            throw new ArgumentOutOfRangeException();
+        }
     }
 }

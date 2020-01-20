@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackShellPluginNext = require('webpack-shell-plugin-next')
 const CopyPlugin = require('copy-webpack-plugin');
+const JSONMinifyPlugin = require('node-json-minify');
 
 const cssLoader = "css-loader";
 
@@ -23,7 +24,7 @@ module.exports = function(env, { runTest }) {
     entry: test ? './test/all-spec.js' :  './src/main.ts',
     output: {
       path: path.resolve(__dirname, '..', '..', 'docs'),
-      filename: 'entry-bundle.js'
+      filename: '[name].[contenthash].js'
     },
     resolve: {
       extensions: ['.ts', '.js'],
@@ -53,7 +54,7 @@ module.exports = function(env, { runTest }) {
       }),
       new CopyPlugin([
         { from: 'src/assets', to: path.resolve(__dirname, '..', '..', 'docs', 'assets') },
-        { from: 'src/data', to: path.resolve(__dirname, '..', '..', 'docs', 'data') },
+        { from: 'src/data', transform: function(content) { return JSONMinifyPlugin(content.toString()); }, to: path.resolve(__dirname, '..', '..', 'docs', '[name].[contenthash].[ext]') },
       ])
     ].filter(p => p)
   }
