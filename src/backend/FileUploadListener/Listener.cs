@@ -45,7 +45,7 @@ namespace FileUploadListener
                                           .GetBlockBlobReference(name);
             using var ms = new MemoryStream();
             await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
-            return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name) };
+            return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
         }
     }
 }

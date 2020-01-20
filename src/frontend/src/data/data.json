@@ -160,6 +160,16 @@
                 { "name": "with Rashi", "duration": "47:40" },
                 { "name": "without Rashi", "duration": "29:54" }
             ]
+        },
+        {
+            "author": "Rabbi Yosef Bromberg",
+            "date": "Jan 20 2020",
+            "series": "Daf Yomi",
+            "subseries": "Berachos",
+            "title": "Daf 17",
+            "versions": [
+                { "name": "with Rashi", "duration": "50:20" }
+            ]
         }
     ]
 }
