@@ -157,7 +157,8 @@
             "subseries": "Berachos",
             "title": "Daf 16",
             "versions": [
-                { "name": "with Rashi", "duration": "47:40" }
+                { "name": "with Rashi", "duration": "47:40" },
+                { "name": "without Rashi", "duration": "29:54" }
             ]
         }
     ]
