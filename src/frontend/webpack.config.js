@@ -54,7 +54,7 @@ module.exports = function(env, { runTest }) {
       }),
       new CopyPlugin([
         { from: 'src/assets', to: path.resolve(__dirname, '..', '..', 'docs', 'assets') },
-        { from: 'src/data', transform: function(content) { return JSONMinifyPlugin(content.toString()); }, to: path.resolve(__dirname, '..', '..', 'docs', '[name].[contenthash].[ext]') },
+        { from: 'src/data/data.json', transform: function(content) { return JSONMinifyPlugin(content.toString()); }, to: path.resolve(__dirname, '..', '..', 'docs', 'data', '[name].[ext]') },
       ])
     ].filter(p => p)
   }
