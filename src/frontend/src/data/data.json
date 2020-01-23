@@ -190,7 +190,8 @@
             "subseries": "Berachos",
             "title": "Daf 19",
             "versions": [
-                { "name": "with Rashi", "duration": "54:28" }
+                { "name": "with Rashi", "duration": "54:28" },
+                { "name": "without Rashi", "duration": "28:21" }
             ]
         }
     ]
