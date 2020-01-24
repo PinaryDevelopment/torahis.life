@@ -201,7 +201,8 @@
             "subseries": "Berachos",
             "title": "Daf 20",
             "versions": [
-                { "name": "with Rashi", "duration": "47:47" }
+                { "name": "with Rashi", "duration": "47:47" },
+                { "name": "without Rashi", "duration": "25:21" }
             ]
         }
     ]
