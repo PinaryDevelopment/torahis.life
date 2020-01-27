@@ -232,7 +232,8 @@
             "subseries": "Berachos",
             "title": "Daf 23",
             "versions": [
-                { "name": "with Rashi", "duration": "51:12" }
+                { "name": "with Rashi", "duration": "51:12" },
+                { "name": "without Rashi", "duration": "30:15" }
             ]
         }
     ]
