@@ -17,6 +17,7 @@ namespace FileUploadListener
         private AudioFileName AudioFileName { get; }
         private string TempFileDirectory { get; }
         private ExecutionContext ExecutionContext { get; }
+        public TimeSpan Duration { get; private set; }
 
         public AudioFileService(ICloudBlob blob, ExecutionContext context)
         {
@@ -120,6 +121,8 @@ namespace FileUploadListener
             tagLibFile.Tag.Copyright = $"{AudioFileName.RecordedOn.Year} © {podcastMetadata.Author}";
 
             tagLibFile.Save();
+
+            Duration = tagLibFile.Properties.Duration;
         }
     }
 }

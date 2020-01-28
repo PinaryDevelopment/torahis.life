@@ -7,8 +7,7 @@ export class MyApp {
   public selectedVersion: Version = undefined;
 
   constructor(client: HttpClient) {
-    // client.get('/data/data.json')
-    client.get('https://raw.githubusercontent.com/PinaryDevelopment/torahis.life/master/docs/data/data.json')
+    client.get('/data/data.json')
       .then(response => response.json())
       .then(data => {
         data.shiurim.forEach((shiur: Shiur) => this.shiurim.push(new Shiur(shiur)));

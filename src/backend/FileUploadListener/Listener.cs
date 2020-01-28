@@ -1,4 +1,5 @@
 using Data;
+using FileUploadListener.GitHub;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -27,9 +28,18 @@ namespace FileUploadListener
             log.LogInformation($"Executing directory: {context.FunctionAppDirectory}");
             log.LogInformation($"Processing Name: {name}, Size: {blob.Properties.Length}b");
             var podcastMetadata = RabbiYosefBrombergFull;
-
             var audioFileService = new AudioFileService(blob, context);
             await audioFileService.ProcessFile(podcastMetadata).ConfigureAwait(false);
+
+            var audioFile = new AudioFileName(blob.Name);
+            await new GitHubClientWrapper(
+                    Environment.GetEnvironmentVariable("GitHub.Owner", EnvironmentVariableTarget.Process),
+                    Environment.GetEnvironmentVariable("GitHub.RepositoryName", EnvironmentVariableTarget.Process),
+                    Environment.GetEnvironmentVariable("GitHub.PrivateKey", EnvironmentVariableTarget.Process),
+                    Environment.GetEnvironmentVariable("GitHub.AppId", EnvironmentVariableTarget.Process),
+                    Environment.GetEnvironmentVariable("GitHub.AppName", EnvironmentVariableTarget.Process)
+                ).CreatePostComment(podcastMetadata.Author, audioFile.RecordedOn, audioFile.Masechta, audioFile.Daf, audioFile.Subtitle, audioFileService.Duration).ConfigureAwait(false);
+
             log.LogInformation($"Uploaded Name:{Path.GetFileName(audioFileService.OutgoingBlobReference.Name)}, Size: {audioFileService.OutgoingBlobReference.Properties.Length}b");
         }
 
@@ -46,6 +56,16 @@ namespace FileUploadListener
             using var ms = new MemoryStream();
             await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
             return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
+        }
+
+        [FunctionName("EightMinuteDafConverter")]
+        public static async Task Run([TimerTrigger("0 0 5 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
+        {
+            log.LogInformation($"Timer executed at: {DateTime.Now}. To process today's eight minute daf.");
+
+            await VideoFileService.ProcessFile(context).ConfigureAwait(false);
+
+            log.LogInformation($"Eight minute daf processed {DateTime.Now}.");
         }
     }
 }
