@@ -19,6 +19,7 @@ namespace FileUploadListener.GitHub
         {
             Owner = owner;
             RepositoryName = repositoryName;
+            privateKey = $"{privateKey}\n";
 
             var userName = new ProductHeaderValue(appName);
             GitHubClient = new GitHubClient(userName) { Credentials = new Credentials(GitHubTokenHelper.CreateToken(appId, privateKey), AuthenticationType.Bearer) };
