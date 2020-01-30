@@ -71,7 +71,7 @@ namespace FileUploadListener.GitHub
                     new TmpVersion
                     {
                         name = subtitle,
-                        duration = duration.ToString("mm:ss")
+                        duration = duration.ToString("mm':'ss")
                     }
                 }
             };
