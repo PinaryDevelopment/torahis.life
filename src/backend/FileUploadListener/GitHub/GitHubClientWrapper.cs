@@ -19,7 +19,7 @@ namespace FileUploadListener.GitHub
         {
             Owner = owner;
             RepositoryName = repositoryName;
-            privateKey = $"{privateKey}\n";
+            privateKey = privateKey.Replace("||", Environment.NewLine);
 
             var userName = new ProductHeaderValue(appName);
             GitHubClient = new GitHubClient(userName) { Credentials = new Credentials(GitHubTokenHelper.CreateToken(appId, privateKey), AuthenticationType.Bearer) };
@@ -85,7 +85,7 @@ namespace FileUploadListener.GitHub
             }
             else
             {
-                shiur.versions = dummyData.versions;
+                shiur.versions.Append(dummyData.versions[0]);
             }
 
             return new[]
@@ -111,9 +111,9 @@ namespace FileUploadListener.GitHub
 
         private async Task CreateCommentPullRequest((FileUpdateInfo fileInfo, string filePath)[] files, BranchInfo branchInfo)
         {
-            foreach (var file in files)
+            foreach (var (fileInfo, filePath) in files)
             {
-                await GitHubClient.Repository.Content.UpdateFile(Owner, RepositoryName, file.filePath, new UpdateFileRequest("new comment", file.fileInfo.UpdatedFileContent, file.fileInfo.OriginalFileContentSha, branchInfo.NewBranchRef)).ConfigureAwait(false);
+                await GitHubClient.Repository.Content.UpdateFile(Owner, RepositoryName, filePath, new UpdateFileRequest("new comment", fileInfo.UpdatedFileContent, fileInfo.OriginalFileContentSha, branchInfo.NewBranchRef)).ConfigureAwait(false);
             }
 
             await GitHubClient.PullRequest.Create(Owner, RepositoryName, new NewPullRequest("new comment", branchInfo.NewBranchName, branchInfo.MasterBranchName)).ConfigureAwait(false);
