@@ -88,6 +88,8 @@ namespace FileUploadListener.GitHub
                 shiur.versions.Append(dummyData.versions[0]);
             }
 
+            var srcDataContent2 = await GitHubClient.Repository.Content.GetAllContents(Owner, RepositoryName, Path.Combine("docs", "data", "data.json")).ConfigureAwait(false);
+
             return new[]
             {
                 (
@@ -102,7 +104,7 @@ namespace FileUploadListener.GitHub
                     new FileUpdateInfo
                     {
                         UpdatedFileContent = JsonSerializer.Serialize(srcDataContainer, new JsonSerializerOptions { WriteIndented = true }),
-                        OriginalFileContentSha = srcDataContent[0].Sha
+                        OriginalFileContentSha = srcDataContent2[0].Sha
                     },
                     Path.Combine("docs", "data", "data.json")
                 )
