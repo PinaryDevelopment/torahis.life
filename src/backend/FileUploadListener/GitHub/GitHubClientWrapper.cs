@@ -104,7 +104,7 @@ namespace FileUploadListener.GitHub
                 (
                     new FileUpdateInfo
                     {
-                        UpdatedFileContent = JsonSerializer.Serialize(srcDataContainer, new JsonSerializerOptions { WriteIndented = true }),
+                        UpdatedFileContent = JsonSerializer.Serialize(srcDataContainer, new JsonSerializerOptions { WriteIndented = false }),
                         OriginalFileContentSha = srcDataContent2[0].Sha
                     },
                     Path.Combine("docs", "data", "data.json")
