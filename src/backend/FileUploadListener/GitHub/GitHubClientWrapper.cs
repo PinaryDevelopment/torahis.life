@@ -86,7 +86,7 @@ namespace FileUploadListener.GitHub
             }
             else
             {
-                shiur.versions.Append(dummyData.versions[0]);
+                shiur.versions = shiur.versions.Append(dummyData.versions[0]).ToArray();
             }
 
             var srcDataContent2 = await GitHubClient.Repository.Content.GetAllContents(Owner, RepositoryName, Path.Combine("docs", "data", "data.json")).ConfigureAwait(false);
