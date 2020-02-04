@@ -23,7 +23,7 @@ namespace FileUploadListener
         };
 
         [FunctionName("BrombergFullOriginalFileListener")]
-        public static async Task BlobListener([BlobTrigger(StaticData.ShiurimContainerName + "/" + StaticData.UploadedFileRootContainerPath + "/{name}", Connection = "")]ICloudBlob blob, string name, ILogger log, ExecutionContext context)
+        public static async Task BlobListener([BlobTrigger(StaticData.ShiurimContainerName + "/" + StaticData.UploadedFileRootContainerPath + "/{name}", Connection = "AzureWebJobsStorage")]ICloudBlob blob, string name, ILogger log, ExecutionContext context)
         {
             log.LogInformation($"Executing directory: {context.FunctionAppDirectory}");
             log.LogInformation($"Processing Name: {name}, Size: {blob.Properties.Length}b");
@@ -41,6 +41,8 @@ namespace FileUploadListener
                 ).CreatePostComment(podcastMetadata.Author, audioFile.RecordedOn, audioFile.Masechta, audioFile.Daf, audioFile.Subtitle, audioFileService.Duration).ConfigureAwait(false);
 
             log.LogInformation($"Uploaded Name:{Path.GetFileName(audioFileService.OutgoingBlobReference.Name)}, Size: {audioFileService.OutgoingBlobReference.Properties.Length}b");
+
+            await EmailerService.SendEmails(blob.Container, audioFile).ConfigureAwait(false);
         }
 
         [FunctionName("ShiurRetriever")]

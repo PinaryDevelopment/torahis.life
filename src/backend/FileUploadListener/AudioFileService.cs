@@ -30,6 +30,8 @@ namespace FileUploadListener
         public async Task ProcessFile(PodcastMetadata podcastMetadata)
         {
             await SaveToDisk().ConfigureAwait(false);
+            var tagLibFile = TagLib.File.Create(TempLocalFilePath);
+            Duration = tagLibFile.Properties.Duration;
             await ReduceFileBitRate().ConfigureAwait(false);
             CreateUploadBlobReference();
             AnnotateFileWithMetadata(podcastMetadata);
@@ -121,8 +123,6 @@ namespace FileUploadListener
             tagLibFile.Tag.Copyright = $"{AudioFileName.RecordedOn.Year} © {podcastMetadata.Author}";
 
             tagLibFile.Save();
-
-            Duration = tagLibFile.Properties.Duration;
         }
     }
 }
