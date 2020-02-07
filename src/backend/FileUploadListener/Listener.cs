@@ -61,7 +61,7 @@ namespace FileUploadListener
         }
 
         [FunctionName("EightMinuteDafConverter")]
-        public static async Task Run([TimerTrigger("0 0 5 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
+        public static async Task Run([TimerTrigger("0 0 10 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
         {
             log.LogInformation($"Timer executed at: {DateTime.Now}. To process today's eight minute daf.");
 

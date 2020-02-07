@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace FileUploadListener
 {
-    public class VideoFileService
+    public static class VideoFileService
     {
-        public static async Task ProcessFile(ExecutionContext context)
+        public static async Task ProcessFile(ExecutionContext context, DateTime? dayToProcess = null)
         {
-            var (Masechta, Daf) = StaticData.CalculateDafForDate(DateTime.Now);
+            dayToProcess ??= DateTime.Now;
+            var (Masechta, Daf) = StaticData.CalculateDafForDate(dayToProcess.Value);
             var shiurName = $"{Masechta} {Daf}";
             var tempFilePath = Path.GetTempPath();
             var client = new HttpClient();
@@ -47,7 +48,7 @@ namespace FileUploadListener
             /*
              DOWNLOAD VIDEO FILE
              */
-            var fileName = $"Daf {Daf} ({DateTime.Now.ToString("MMM d yyyy")})";
+            var fileName = $"Daf {Daf} ({dayToProcess.Value.ToString("MMM d yyyy")})";
             var videoFilePath = Path.Combine(tempFilePath, $"{fileName}.mp4");
             response = client.GetAsync(shiur.contentUrl).ConfigureAwait(false).GetAwaiter().GetResult();
             using var content = response.Content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -90,6 +91,7 @@ namespace FileUploadListener
                                           .GetBlockBlobReference(Path.Combine("dist/rabbielistefansky/eightminutedaf", Masechta.ToLowerInvariant().Replace(" ", string.Empty), Path.GetFileName(mp3FilePath)));
             blockBlob.Properties.ContentType = "audio/mpeg";
             await blockBlob.UploadFromFileAsync(mp3FilePath).ConfigureAwait(false);
+            File.Delete(videoFilePath);
             File.Delete(mp3FilePath);
         }
     }
