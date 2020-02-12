@@ -42,7 +42,10 @@ namespace FileUploadListener
 
             log.LogInformation($"Uploaded Name:{Path.GetFileName(audioFileService.OutgoingBlobReference.Name)}, Size: {audioFileService.OutgoingBlobReference.Properties.Length}b");
 
-            await EmailerService.SendEmails(blob.Container, audioFile).ConfigureAwait(false);
+            if (bool.Parse(Environment.GetEnvironmentVariable("ShouldSendEmail", EnvironmentVariableTarget.Process) ?? bool.FalseString))
+            {
+                await EmailerService.SendEmails(blob.Container, audioFile).ConfigureAwait(false);
+            }
         }
 
         [FunctionName("ShiurRetriever")]
