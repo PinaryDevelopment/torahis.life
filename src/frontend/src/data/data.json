@@ -546,6 +546,45 @@
           "duration": "55:24"
         }
       ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Feb 9 2020",
+      "series": "Daf Yomi",
+      "subseries": "Berachos",
+      "title": "Daf 37",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "35:56"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Feb 10 2020",
+      "series": "Daf Yomi",
+      "subseries": "Berachos",
+      "title": "Daf 38",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "34:07"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Feb 11 2020",
+      "series": "Daf Yomi",
+      "subseries": "Berachos",
+      "title": "Daf 39",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "43:49"
+        }
+      ]
     }
   ]
 }
