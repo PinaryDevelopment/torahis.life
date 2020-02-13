@@ -17,6 +17,7 @@
     box-shadow: 0 .75rem .5rem -.5rem hsl(57, 0%, 37%);
     cursor: pointer;
     transition: all .5s;
+    align-items: center;
 }
 
 .controls button:hover,
