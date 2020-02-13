@@ -1,3 +1,5 @@
+<import from="./audio-player"></import>
+
 <header>
     <h1>TorahIs.Life</h1>
 </header>
@@ -19,16 +21,8 @@
 </main>
 
 <div class="faux-dialog" if.bind="selectedShiur">
-    <div click.delegate="closeDialog()">X</div>
-    <figure>
-        <figcaption>${selectedShiur.subseries} - ${selectedShiur.title} ${selectedVersion.name}. Given by ${selectedShiur.author}.</figcaption>
-        <audio controls src="https://torahislife.azurewebsites.net/api/ShiurRetriever?name=${selectedShiur.getVersionLocation(selectedVersion)}">
-                Your browser does not support the<code>audio</code> element.
-        </audio>
-        <!-- <audio controls src="http://localhost:7071/api/ShiurRetriever?name=${selectedShiur.getVersionLocation(selectedVersion)}">
-            Your browser does not support the<code>audio</code> element.
-        </audio> -->
-    </figure>
+    <div class="close" click.delegate="closeDialog()">X</div>
+    <audio-player url="https://torahislife.azurewebsites.net/api/ShiurRetriever?name=${selectedShiur.getVersionLocation(selectedVersion)}"></audio-player>
 </div>
 
 <footer>Powered by Pinary Development LLC © ${copyrightYears}</footer>

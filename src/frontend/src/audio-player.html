@@ -1,0 +1,38 @@
+<audio autoplay durationchange.trigger="updateDuration($event.target)" timeupdate.trigger="updateCurrentTime($event.target)" ref="audioElement">
+    <source src.bind="url" type="audio/mpeg" />
+</audio>
+ 
+
+<input class="current-time" title="location" type="range" min="0" max="100" value="0" class="slider" step=".001" input.delegate="slideTimeUpdate($event.target.value)" />
+<div>${currentLocation} - ${totalLength}</div>
+
+<div class="controls">
+    <button type="button" click.delegate="goToBeginning()" title="go to beginning">
+        <i class="icon">&#9614;&#9668;</i>
+        <span>Start</span>
+    </button>
+    <button type="button" click.delegate="rewind()" title="seek backward">
+        <i class="icon seek">&#9668;&#9668;</i>
+        <span>Rewind</span>
+    </button>
+
+    <button type="button" class="play" click.delegate="togglePlay()" title="play">
+        <i class="icon" if.bind="audioElement.paused">&#9658;</i>
+        <i class="icon" if.bind="!audioElement.paused">&#9614; &#9614;</i>
+        <span>${audioElement.paused ? 'Play' : 'Pause'}</span>
+    </button>
+
+    <button type="button" click.delegate="fastForward()" title="seek forward">
+        <i class="icon seek">&#9658;&#9658;</i>
+        <span>Advance</span>
+    </button>
+    <button type="button" click.delegate="goToEnd()" title="go to end">
+        <i class="icon">&#9658;&#9614;</i>
+        <span>End</span>
+    </button>
+
+    <div class="volume">
+        <i class="icon">&#128362;</i>
+        <input title="volume" type="range" min="0" max="100" value.bind="volume" class="slider" input.delegate="updateVolume($event.target.value)" />
+    </div>
+</div>

@@ -200,6 +200,8 @@ main>h4 {
   top: 50%;
   transition: all 0.5s ease-in-out;
   width: 0;
+  flex-direction: column;
+  padding: 1em;
 }
 
 .faux-dialog.full {
@@ -210,4 +212,18 @@ main>h4 {
   width: calc(100vw - 2em);
   bottom: 0;
   border-radius: 5px;
+}
+
+.faux-dialog .close {
+  top: 1em;
+  position: absolute;
+  right: 1em;
+}
+
+.faux-dialog .close:hover {
+  cursor: pointer;
+}
+
+.faux-dialog audio-player {
+  width: 100%;
 }
