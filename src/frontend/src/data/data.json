@@ -694,6 +694,10 @@
         {
           "name": "with Rashi",
           "duration": "40:32"
+        },
+        {
+          "name": "without Rashi",
+          "duration": "20:42"
         }
       ]
     }
