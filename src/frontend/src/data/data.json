@@ -747,6 +747,19 @@
           "duration": "42:20"
         }
       ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Feb 22 2020",
+      "series": "Daf Yomi",
+      "subseries": "Berachos",
+      "title": "Daf 50",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "47:50"
+        }
+      ]
     }
   ]
 }
