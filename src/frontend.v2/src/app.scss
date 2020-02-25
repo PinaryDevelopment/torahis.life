@@ -1,0 +1,52 @@
+:root {
+  /* --main-bg-color: #382901; */
+  --main-bg-color-rgb: 31, 23, 1;
+  --main-bg-color: rgb(var(--main-bg-color-rgb));
+  --inverse-txt-color: #dad8d0;
+
+  --base-fnt-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Ubuntu', serif;
+}
+
+body {
+  font-size: var(--base-fnt-size);
+  height: 100vh;
+  margin: 0;
+}
+
+app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+au-viewport[name='main'] {
+  flex-grow: 1;
+  margin: 0;
+  overflow-x: auto;
+  padding: 1.75em 1em .75em 0;
+  width: 100vw;
+}
+
+header {
+  background-color: var(--main-bg-color);
+  color: var(--inverse-txt-color);
+  padding: .75em 1em;
+}
+
+header > h1 {
+  margin: 0;
+}
+
+footer {
+  background-color: var(--main-bg-color);
+  color: var(--inverse-txt-color);
+  font-size: .75em;
+  padding: .75em 1em;
+  text-align: center;
+}
