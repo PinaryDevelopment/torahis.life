@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace DataVersionMigrater
 {
@@ -29,7 +30,18 @@ namespace DataVersionMigrater
 
         public static V2Data TransformV1ToV2(V1Data v1Data)
         {
-            var tags = v1Data.shiurim.Select(s => new[] { s.author, s.series, s.subseries }.Concat(s.versions.Select(v => v.name))).SelectMany(s => s).Distinct().ToArray();
+            var tags = v1Data.shiurim
+                             .Select(s => new[]
+                             {
+                                new V2Tag { tag = s.author, type = V2TagType.Author },
+                                new V2Tag { tag = s.series, type = V2TagType.Series },
+                                new V2Tag { tag = s.subseries, type = V2TagType.Series }
+                             }
+                             .Concat(s.versions.Select(v => new V2Tag { tag = v.name, type = V2TagType.Series })))
+                             .SelectMany(s => s)
+                             .GroupBy(s => s.tag)
+                             .Select(g => g.First())
+                             .ToArray();
             var shiurim =  v1Data.shiurim
                                  .Select(shiur =>
                                    shiur.versions
@@ -41,10 +53,10 @@ namespace DataVersionMigrater
                                                 title = shiur.title,
                                                 tags = new[]
                                                 {
-                                                   Array.IndexOf(tags, shiur.author),
-                                                   Array.IndexOf(tags, shiur.series),
-                                                   Array.IndexOf(tags, shiur.subseries),
-                                                   Array.IndexOf(tags, version.name)
+                                                   Array.FindIndex(tags, t => t.tag == shiur.author),
+                                                   Array.FindIndex(tags, t => t.tag == shiur.series),
+                                                   Array.FindIndex(tags, t => t.tag == shiur.subseries),
+                                                   Array.FindIndex(tags, t => t.tag == version.name)
                                                },
                                                duration = version.duration,
                                                date = date.ToString("s")
@@ -81,17 +93,38 @@ namespace DataVersionMigrater
         }
     }
 
+    public enum V2TagType
+    {
+        Unknown = 0,
+        Author = 1,
+        Series = 2
+    }
+
+    public class V2Tag
+    {
+        //[JsonPropertyName("0")]
+        public string tag { get; set; }
+        //[JsonPropertyName("1")]
+        public V2TagType type { get; set; }
+    }
+
     public class V2Data
     {
-        public string[] tags { get; set; }
+        //[JsonPropertyName("0")]
+        public V2Tag[] tags { get; set; }
+        //[JsonPropertyName("1")]
         public V2Shiur[] shiurim { get; set; }
     }
 
     public class V2Shiur
     {
+        //[JsonPropertyName("0")]
         public string title { get; set; }
+        //[JsonPropertyName("1")]
         public int[] tags { get; set; }
+        //[JsonPropertyName("2")]
         public string date { get; set; }
+        //[JsonPropertyName("3")]
         public string duration { get; set; }
     }
 
