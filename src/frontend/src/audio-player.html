@@ -7,6 +7,12 @@
 <div>${currentLocation} - ${totalLength}</div>
 
 <div class="controls">
+    <button type="button" click.delegate="goToBeginning()" title="playback speed">
+        <i class="icon">&#x23F2;</i>
+        <span>Playback Speed</span>
+    </button>
+    <input class="playback-speed" title="playback speed" type="range" min="0.7" max="2" value="1" class="slider" step=".1" input.delegate="slideTimeUpdate($event.target.value)" />
+
     <button type="button" click.delegate="goToBeginning()" title="go to beginning">
         <i class="icon">&#9614;&#9668;</i>
         <span>Start</span>
