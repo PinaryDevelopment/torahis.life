@@ -1,5 +1,6 @@
 ﻿using Data;
 using Microsoft.WindowsAzure.Storage;
+using System;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
@@ -89,6 +90,11 @@ namespace FileUploader
             Controls.Find<ComboBox>(TitleInputKey).SelectedIndexChanged += (a, b) => UpdateSubtitleComboBoxOptions();
             Controls.Find<ComboBox>(SubtitleInputKey).SelectedIndexChanged += (a, b) => UpdateDafComboBoxOptions();
             Controls.Find<ComboBox>(AuthorInputKey).SelectedIndex = 0;
+
+            var (Masechta, Daf) = StaticData.CalculateDafForDate(DateTime.Now);
+            Controls.Find<ComboBox>(TitleInputKey).SelectedIndex = Controls.Find<ComboBox>(TitleInputKey).Items.IndexOf($"Daf Yomi - {Masechta}");
+            Controls.Find<ComboBox>(SubtitleInputKey).SelectedIndex = Controls.Find<ComboBox>(SubtitleInputKey).Items.IndexOf(DateTime.Now.Hour > 12 ? "without Rashi" : "with Rashi");
+            Controls.Find<ComboBox>(DafInputKey).SelectedIndex = Controls.Find<ComboBox>(DafInputKey).Items.IndexOf($"{Daf}");
 
             Control control = new Label { Text = "Date", Height = controlHeight, Width = labelWidth, Visible = true, Location = new Point(paddingSize, y) };
             Controls.Add(control);
