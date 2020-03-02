@@ -50,7 +50,11 @@ namespace FileUploader
                     }
                     cloudFilePath = Path.Combine(cloudFilePath, $"Daf {daf}-{shiur.Version}-{date.ToString("yyyy.MM.dd")}{Path.GetExtension(originalFileName).ToLowerInvariant()}");
                     var blockBlobReference = containerReference.GetBlockBlobReference(cloudFilePath);
-                    blockBlobReference.UploadFromStreamAsync(fileDialog.OpenFile()).ConfigureAwait(false).GetAwaiter().GetResult();
+                    using (var fileStream = fileDialog.OpenFile())
+                    {
+                        blockBlobReference.UploadFromStreamAsync(fileStream).ConfigureAwait(false).GetAwaiter().GetResult();
+                    }
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(fileDialog.FileName, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
                     Application.Exit();
                 };
             };
