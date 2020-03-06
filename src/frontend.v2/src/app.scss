@@ -1,7 +1,7 @@
 :root {
-  /* --main-bg-color: #382901; */
   --main-bg-color-rgb: 31, 23, 1;
-  --main-bg-color: rgb(var(--main-bg-color-rgb));
+  /* https://github.com/sass/node-sass/issues/2251#issuecomment-365861645 */
+  --main-bg-color: RGB(var(--main-bg-color-rgb));
   --inverse-txt-color: #dad8d0;
 
   --base-fnt-size: 16px;
@@ -13,24 +13,11 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   font-size: var(--base-fnt-size);
   height: 100vh;
   margin: 0;
-}
-
-app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  margin: 0;
-}
-
-au-viewport[name='main'] {
-  flex-grow: 1;
-  margin: 0;
-  overflow-x: auto;
-  padding: 1.75em 1em .75em 0;
-  width: 100vw;
 }
 
 header {
@@ -41,6 +28,54 @@ header {
 
 header > h1 {
   margin: 0;
+}
+
+app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow:auto;
+}
+
+au-viewport[name='main'] {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-gap: 32px;
+  grid-auto-flow: dense;
+  justify-items: center;
+}
+
+@media (max-width: 459px) {
+  au-viewport[name='main'] {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+button {
+  --button-color: 239, 239, 239;
+  --text-color: 0, 0, 0;
+  --box-shadow-color: 94, 94, 94;
+  --hover-button-color: 150, 150, 150;
+
+  background-color: RGB(var(--button-color));
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: RGB(var(--text-color));
+  font-size: .8em;
+  margin: 0.5em;
+  padding: 0.33em 0.66em;
+
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  box-shadow: 0 0.75em 0.5em -0.5em RGBA(var(--box-shadow-color), 0.9);
+  cursor: pointer;
+  transition: all 0.5s;
 }
 
 footer {

@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FileUploadListener
@@ -82,28 +83,17 @@ namespace FileUploadListener
                                                      .GetBlockBlobReference("data.json")
                                                      .DownloadTextAsync()
                                                      .ConfigureAwait(false);
-            var data = System.Text.Json.JsonSerializer.Deserialize<V2Data>(serializedData);
+            var data = JsonSerializer.Deserialize<V2Data>(serializedData);
             var relevantTags = data.tags.Select((Tag, Index) => (Tag, Index)).Where(t => tags.Contains(t.Tag.tag, StringComparer.OrdinalIgnoreCase));
             var tagIds = relevantTags.Select(t => t.Index);
             var shiurim = data.shiurim.Where(s => s.tags.Any(t => tagIds.Contains(t)));
-            //var tags2 = req.Query["tags"].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-            //var result = new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags });
             var origin = req.Headers["Origin"];
             if (origin == "http://localhost:9000" || origin == "https://torahis.life")
             {
                 req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
             }
-            return await Task.FromResult(new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags }));
-            //var name = req.Query["name"];
-            //log.LogInformation($"Requested Name: {name}");
 
-            //var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
-            //                              .CreateCloudBlobClient()
-            //                              .GetContainerReference(StaticData.ShiurimContainerName)
-            //                              .GetBlockBlobReference(name);
-            //using var ms = new MemoryStream();
-            //await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
-            //return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
+            return await Task.FromResult(new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags }));
         }
     }
 
