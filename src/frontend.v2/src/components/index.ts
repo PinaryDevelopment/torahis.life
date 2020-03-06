@@ -1,2 +1,2 @@
 export { AudioPlayer } from './audio-player';
-export { ShiurimList } from './shiurim-list';
+export { ShiurimGrid } from './shiurim-grid';

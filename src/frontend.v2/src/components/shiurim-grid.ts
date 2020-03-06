@@ -1,7 +1,7 @@
 import { Shiur } from '../models/index';
 import { ShiurimService } from '../services/shiurim.service';
 
-export class ShiurimList {
+export class ShiurimGrid {
     public static parameters: string[] = ['tags'];
 
     public shiurim: Shiur[] = [];
@@ -25,6 +25,7 @@ export class ShiurimList {
                         });
                     } else {
                         pv[cv.title] = {
+                            id: 0,
                             series,
                             title: cv.title,
                             author: cv.author,
@@ -43,7 +44,9 @@ export class ShiurimList {
                 },
                 {}
             );
-        this.v2 = [].concat(Object.keys(distinctDafim).map(key => distinctDafim[key]))
+        this.v2 = [].concat(Object.keys(distinctDafim)
+                    .map(key => distinctDafim[key]))
+                    .sort((s1, s2) => s1.date > s2.date ? -1 : s2.date > s1.date ? 1 : 0);
     }
 
     public downloadShiur(shiur: Shiur) {

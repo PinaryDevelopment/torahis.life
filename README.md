@@ -68,6 +68,7 @@ If the frontend work needs to actually make calls to the backend, then there are
 | Framework/Library | Documentation | Notes |
 | ---------- | ------------- | --- |
 | Aurelia 2  | [v2](https://docs.aurelia.io/), [v1](https://aurelia.io/docs) | v2 is the version used by this application, but the documentation is mostly non-existent. v1 documentation can be used as a spring-board for most things in the interim. |
+| Aurelia 2 routing | [video tutorial](https://www.youtube.com/watch?v=mwrIiwVPSHo) | |
 | HTML Audio | [docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) |
 | Taglib | [docs](https://github.com/mono/taglib-sharp#taglib) |
 | Send Grid | [docs](https://sendgrid.com/docs/) |
