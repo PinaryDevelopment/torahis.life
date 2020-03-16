@@ -7,18 +7,22 @@ import { inject, bindable } from 'aurelia';
 export class AudioPlayer {
 
     private get currentTimeElement() {
-        return this.element.querySelector<HTMLInputElement>('.current-time');
+        return this.element.querySelector<HTMLInputElement>('[title="location"]');
     }
 
     private set currentTime(currentTime: number) {
         this.currentTimeElement.value = ((currentTime / this.audioElement.duration) * 100).toString();
         this.currentLocation = this.createTimeSpan(currentTime);
     }
+
     @bindable public url: string;
     public audioElement: HTMLAudioElement;
     public totalLength = '00:00';
     public currentLocation = '00:00';
     public volume = 50;
+    public fastForwardAmount = 15;
+    public rewindAmount = 15;
+    public isLoading = true;
 
     constructor(public element: Element) {
     }
@@ -26,6 +30,7 @@ export class AudioPlayer {
     public updateDuration(audioElement: HTMLAudioElement) {
         if (audioElement.duration) {
             this.totalLength = this.createTimeSpan(audioElement.duration);
+            this.isLoading = false;
         }
     }
 
@@ -53,14 +58,14 @@ export class AudioPlayer {
 
     public fastForward() {
         const currentTime = this.audioElement.currentTime;
-        this.currentTime = currentTime + 15;
-        this.audioElement.currentTime = currentTime + 15;
+        this.currentTime = currentTime + this.fastForwardAmount;
+        this.audioElement.currentTime = currentTime + this.fastForwardAmount;
     }
 
     public rewind() {
         const currentTime = this.audioElement.currentTime;
-        this.currentTime = currentTime - 15;
-        this.audioElement.currentTime = currentTime - 15;
+        this.currentTime = currentTime - this.rewindAmount;
+        this.audioElement.currentTime = currentTime - this.rewindAmount;
     }
 
     public goToEnd() {
@@ -76,11 +81,21 @@ export class AudioPlayer {
     // public percentLoaded() {
     //     for (let i = 0; i < this.audioElement.buffered.length; i++) {
     //         if (this.audioElement.buffered.start(this.audioElement.buffered.length - 1 - i) < this.audioElement.currentTime) {
-    //             console.log((this.audioElement.buffered.end(this.audioElement.buffered.length - 1 - i) / this.audioElement.duration) * 100 + "%");
     //             break;
     //         }
     //     }
     // }
+
+    private previousVolume: number;
+    public toggleVolume() {
+        if (this.volume !== 0) {
+            this.previousVolume = this.volume;
+            this.volume = 0;
+        } else{
+            this.volume = this.previousVolume;
+            this.previousVolume = 0;
+        }
+    }
 
     private createTimeSpan(timeInSeconds: number) {
         let minutes = Math.floor((timeInSeconds / 60)).toFixed(0);

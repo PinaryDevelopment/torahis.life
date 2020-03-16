@@ -15,7 +15,7 @@ namespace FileUploadListener
         {
             dayToProcess ??= DateTime.Now;
             var (Masechta, Daf) = StaticData.CalculateDafForDate(dayToProcess.Value);
-            var shiurName = $"{Masechta} {Daf}";
+            var shiurName = $"{Masechta} {(Daf < 10 ? "0" + Daf : Daf.ToString())}";
             var tempFilePath = Path.GetTempPath();
             var client = new HttpClient();
 

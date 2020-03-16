@@ -42,6 +42,7 @@ namespace DataVersionMigrater
                              .GroupBy(s => s.tag)
                              .Select(g => g.First())
                              .ToArray();
+            var id = 0;
             var shiurim =  v1Data.shiurim
                                  .Select(shiur =>
                                    shiur.versions
@@ -53,19 +54,27 @@ namespace DataVersionMigrater
                                                 title = shiur.title,
                                                 tags = new[]
                                                 {
-                                                   Array.FindIndex(tags, t => t.tag == shiur.author),
-                                                   Array.FindIndex(tags, t => t.tag == shiur.series),
-                                                   Array.FindIndex(tags, t => t.tag == shiur.subseries),
-                                                   Array.FindIndex(tags, t => t.tag == version.name)
-                                               },
-                                               duration = version.duration,
-                                               date = date.ToString("s")
+                                                    Array.FindIndex(tags, t => t.tag == shiur.author),
+                                                    Array.FindIndex(tags, t => t.tag == shiur.series),
+                                                    Array.FindIndex(tags, t => t.tag == shiur.subseries),
+                                                    Array.FindIndex(tags, t => t.tag == version.name)
+                                                },
+                                                duration = version.duration,
+                                                date = date.ToString("s"),
+                                                id = id++
                                             };
                                            }
                                         )
                                  )
                                  .SelectMany(s => s)
                                  .ToArray();
+
+            foreach (var shiur in shiurim)
+            {
+                shiur.previousId = shiurim.FirstOrDefault(s => (s.id == shiur.id - 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id - 2 && s.title != shiur.title))?.id;
+                shiur.nextId = shiurim.FirstOrDefault(s => (s.id == shiur.id + 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id + 2 && s.title != shiur.title))?.id;
+            }
+
             return new V2Data
             {
                 shiurim = shiurim,
@@ -126,6 +135,9 @@ namespace DataVersionMigrater
         public string date { get; set; }
         //[JsonPropertyName("3")]
         public string duration { get; set; }
+        public int id { get; set; }
+        public int? previousId { get; set; }
+        public int? nextId { get; set; }
     }
 
     public class V1Data

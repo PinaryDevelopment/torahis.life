@@ -55,11 +55,12 @@ module.exports = function(env) {
       ]
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: 'index.ejs' }) //,
-      // new CopyPlugin([
-      //   // { from: 'src/assets', to: path.resolve(__dirname, '..', '..', 'docs', 'assets') },
-      //   { from: 'src/data/data.json', transform: function(content) { return JSONMinifyPlugin(content.toString()); }, to: path.resolve(__dirname, '..', '..', 'docs', 'data', '[name].[ext]') },
-      // ])
+      new HtmlWebpackPlugin({ template: 'index.ejs' }),
+      new CopyPlugin([
+        { from: 'src/assets', to: 'assets' },
+        // { from: 'src/assets', to: path.resolve(__dirname, '..', '..', 'docs', 'assets') },
+        // { from: 'src/data/data.json', transform: function(content) { return JSONMinifyPlugin(content.toString()); }, to: path.resolve(__dirname, '..', '..', 'docs', 'data', '[name].[ext]') },
+      ])
     ]
   }
 }

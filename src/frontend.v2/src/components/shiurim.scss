@@ -1,8 +1,26 @@
+.series.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-gap: 32px;
+    grid-auto-flow: dense;
+    justify-items: center;
+    padding: 16px;
+}
+
+@media (max-width: 459px) {
+    .series.grid {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
 .card {
   --card-height: 175px;
   --card-width: 230px;
   align-items: center;
-  background: linear-gradient(rgba(179, 156, 95, 1), rgba(150, 117, 24, 1));
+//   background: linear-gradient(rgba(179, 156, 95, 1), rgba(150, 117, 24, 1));
+  background: linear-gradient(rgba(179, 156, 95, 0.5), rgba(150, 117, 24, 0.75)), no-repeat center url('/assets/img/talmud_scroll.jpg');
   border-radius: 5px;
   box-shadow: 1.5rem 0 2rem #222;
   color: #000;
@@ -41,7 +59,6 @@
     padding: 0;
     flex-direction: column;
     align-items: center;
-    flex-grow: 1;
     justify-content: center;
 }
 
@@ -101,4 +118,14 @@
 
 .date {
     font-size: .75rem;
+}
+
+.series.title {
+    position: sticky;
+    top: 0;
+    // background-color: rgb(150, 117, 24);
+    background-color: var(--main-bg-color);
+    color: #fff;
+    border-top: 1px dotted #fff;
+    z-index: 10;
 }

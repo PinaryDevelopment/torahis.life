@@ -6,12 +6,18 @@ export class Shiur {
     public tags: Tag[];
     public date: Date;
     public duration: string;
+    public id: number;
+    public previousId?: number;
+    public nextId?: number;
 
-    constructor({title = '', tags = [], date, duration = '' }) {
+    constructor({ title = '', tags = [], date, duration = '', id, previousId, nextId }) {
         this.title = title;
         this.tags = tags;
         this.date = date;
         this.duration = duration;
+        this.id = id;
+        this.previousId = previousId;
+        this.nextId = nextId;
     }
 
     public get author() {

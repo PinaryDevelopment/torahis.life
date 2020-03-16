@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -47,20 +48,42 @@ namespace FileUploadListener
         //    }
         //}
 
-        //[FunctionName("ShiurRetriever")]
-        //public static async Task<IActionResult> ShiurRetriever([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
-        //{
-        //    var name = req.Query["name"];
-        //    log.LogInformation($"Requested Name: {name}");
+        [FunctionName("ShiurRetriever")]
+        public static async Task<IActionResult> ShiurRetriever([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
+        {
+            //var name = req.Query["name"];
+            //log.LogInformation($"Requested Name: {name}");
 
-        //    var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
-        //                                  .CreateCloudBlobClient()
-        //                                  .GetContainerReference(StaticData.ShiurimContainerName)
-        //                                  .GetBlockBlobReference(name);
-        //    using var ms = new MemoryStream();
-        //    await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
-        //    return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
-        //}
+            //var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+            //                              .CreateCloudBlobClient()
+            //                              .GetContainerReference(StaticData.ShiurimContainerName)
+            //                              .GetBlockBlobReference(name);
+            //using var ms = new MemoryStream();
+            //await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
+            //return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
+
+            var origin = req.Headers["Origin"];
+            // TODO: get this from config so prod version will only allow torahis.life?
+            if (origin == "http://localhost:9000" || origin == "https://torahis.life")
+            {
+                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+            }
+
+            var id = int.Parse(req.Query["id"]);
+            log.LogInformation($"Requested Id: {id}");
+
+            var data = await GetData().ConfigureAwait(false);
+            var shiur = data.shiurim.First(s => s.id == id);
+            var tags = data.tags.Where((t, i) => shiur.tags.Contains(i)).Select(t => t.tag).ToArray();
+            var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+                                          .CreateCloudBlobClient()
+                                          .GetContainerReference(StaticData.ShiurimContainerName)
+                                          .GetBlockBlobReference($"dist/{tags[0].ToLower().Replace(" ", string.Empty)}/{tags[1].ToLower().Replace(" ", string.Empty)}/{tags[3].ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags[2]} ({DateTime.ParseExact(shiur.date, "s", null).ToString("MMM d yyyy")}).mp3");
+            using var ms = new MemoryStream();
+            await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
+            ms.Seek(0, 0);
+            return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
+        }
 
         //[FunctionName("EightMinuteDafConverter")]
         //public static async Task Run([TimerTrigger("0 0 10 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
@@ -75,8 +98,36 @@ namespace FileUploadListener
         [FunctionName("ShiurInfo")]
         public static async Task<IActionResult> ShiurInfo([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
         {
-            var tags = req.Query["tags"].Select(tag => tag.Replace("-", " "));
+            var data = await GetData().ConfigureAwait(false);
 
+            var origin = req.Headers["Origin"];
+            // TODO: get this from config so prod version will only allow torahis.life?
+            if (origin == "http://localhost:9000" || origin == "https://torahis.life")
+            {
+                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+            }
+
+            if (req.Query.ContainsKey("id"))
+            {
+                var id = int.Parse(req.Query["id"]);
+                return new JsonResult(new V2Data { shiurim = new[] { data.shiurim.First(s => s.id == id) }, tags = data.tags });
+            }
+            else
+            {
+                var tags = req.Query["tags"].Select(tag => tag.Replace("-", " "));
+                var tagIds = data.tags
+                                  .Select((Tag, Index) => (Tag, Index))
+                                  .Where(t => tags.Contains(t.Tag.tag, StringComparer.OrdinalIgnoreCase))
+                                  .Select(t => t.Index);
+                var shiurim = data.shiurim.Where(s => tagIds.All(id => s.tags.Contains(id)));
+
+                return new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags });
+            }
+        }
+
+        private static async Task<V2Data> GetData()
+        {
+            // TODO: cache this a bit more
             var serializedData = await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
                                                      .CreateCloudBlobClient()
                                                      .GetContainerReference(StaticData.ShiurimContainerName)
@@ -84,16 +135,21 @@ namespace FileUploadListener
                                                      .DownloadTextAsync()
                                                      .ConfigureAwait(false);
             var data = JsonSerializer.Deserialize<V2Data>(serializedData);
-            var relevantTags = data.tags.Select((Tag, Index) => (Tag, Index)).Where(t => tags.Contains(t.Tag.tag, StringComparer.OrdinalIgnoreCase));
-            var tagIds = relevantTags.Select(t => t.Index);
-            var shiurim = data.shiurim.Where(s => s.tags.Any(t => tagIds.Contains(t)));
-            var origin = req.Headers["Origin"];
-            if (origin == "http://localhost:9000" || origin == "https://torahis.life")
+            // TODO: move this to the data migrator project
+            var i = 1;
+            foreach (var shiur in data.shiurim)
             {
-                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                shiur.id = i;
+                i++;
             }
 
-            return await Task.FromResult(new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags }));
+            foreach (var shiur in data.shiurim)
+            {
+                shiur.previousId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id - 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id - 2 && s.title != shiur.title))?.id;
+                shiur.nextId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id + 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id + 2 && s.title != shiur.title))?.id;
+            }
+
+            return data;
         }
     }
 
@@ -122,6 +178,7 @@ namespace FileUploadListener
 
     public class V2Shiur
     {
+        public int id { get; set; }
         //[JsonPropertyName("0")]
         public string title { get; set; }
         //[JsonPropertyName("1")]
@@ -130,5 +187,7 @@ namespace FileUploadListener
         public string date { get; set; }
         //[JsonPropertyName("3")]
         public string duration { get; set; }
+        public int? previousId { get; set; }
+        public int? nextId { get; set; }
     }
 }
