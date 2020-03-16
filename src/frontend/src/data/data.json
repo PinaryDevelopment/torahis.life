@@ -1002,6 +1002,105 @@
         {
           "name": "with Rashi",
           "duration": "46:09"
+        },
+        {
+          "name": "without Rashi",
+          "duration": "22:02"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 10 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 4",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "36:16"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 11 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 5",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "46:11"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 12 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 6",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "48:12"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 13 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 7",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "48:16"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 14 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 8",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "45:04"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 15 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 9",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "36:27"
+        },
+        {
+          "name": "without Rashi",
+          "duration": "14:04"
+        }
+      ]
+    },
+    {
+      "author": "Rabbi Yosef Bromberg",
+      "date": "Mar 16 2020",
+      "series": "Daf Yomi",
+      "subseries": "Shabbos",
+      "title": "Daf 10",
+      "versions": [
+        {
+          "name": "with Rashi",
+          "duration": "41:23"
         }
       ]
     }
