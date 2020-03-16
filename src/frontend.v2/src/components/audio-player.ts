@@ -14,7 +14,6 @@ export class AudioPlayer {
         this.currentTimeElement.value = ((currentTime / this.audioElement.duration) * 100).toString();
         this.currentLocation = this.createTimeSpan(currentTime);
     }
-
     @bindable public url: string;
     public audioElement: HTMLAudioElement;
     public totalLength = '00:00';

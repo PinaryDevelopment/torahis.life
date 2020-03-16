@@ -84,6 +84,7 @@ namespace FileUploadListener
             ms.Seek(0, 0);
             return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
         }
+    }
 
         //[FunctionName("EightMinuteDafConverter")]
         //public static async Task Run([TimerTrigger("0 0 10 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
