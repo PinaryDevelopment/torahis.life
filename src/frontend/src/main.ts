@@ -1,8 +1,13 @@
-import Aurelia from 'aurelia';
-import { MyApp } from './my-app';
-// import * as globalComponents from './registry';
+import Aurelia, { StyleConfiguration, RouterConfiguration } from 'aurelia';
+import { App } from './app';
+import * as components from './components/index';
+import { JitHtmlBrowserConfiguration } from '@aurelia/jit-html-browser';
 
-Aurelia
-    // .register(globalComponents)
-    .app(MyApp)
-    .start();
+Aurelia.register(
+    JitHtmlBrowserConfiguration,
+    StyleConfiguration.cssModulesProcessor(),
+    components,
+    RouterConfiguration.customize({useUrlFragmentHash: false}),
+)
+.app(App)
+.start();

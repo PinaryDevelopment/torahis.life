@@ -65,38 +65,6 @@ export class Shiurim {
         this.v2 = [].concat(Object.keys(series)
                                   .map(key => ({ title: key, shiurim: series[key] }))
                   ).reverse();
-        // const distinctDafim = this.shiurim
-        //                           .reduce(
-        //                               (pv: any, cv) => {
-        //                                   const seriesTitle = cv.series[1];
-        //                                   if (pv[cv.title]) {
-        //                                       pv[cv.title].versions.push({
-        //                                           version: cv.series[2],
-        //                                           duration: cv.duration,
-        //                                           shiur: cv
-        //                                       });
-        //                                   } else {
-        //                                       pv[cv.title] = {
-        //                                           id: 0,
-        //                                           series: seriesTitle,
-        //                                           title: cv.title,
-        //                                           author: cv.author,
-        //                                           date: cv.date,
-        //                                           versions: [{
-        //                                               version: cv.series[2],
-        //                                               duration: cv.duration,
-        //                                               shiur: cv
-        //                                           }]
-        //                                       }
-        //                                   }
-
-        //                                 return pv;
-        //                             },
-        //                             {}
-        //                         );
-        // this.v2 = [].concat(Object.keys(distinctDafim)
-        //                           .map(key => distinctDafim[key])
-        //           ).sort(this.dateDescending);
     }
 
     public dateDescending(s1: Shiur, s2: Shiur): -1 | 1 | 0 {
@@ -104,8 +72,8 @@ export class Shiurim {
     }
 
     public downloadShiur(shiur: Shiur) {
-        // window.location.href = `https://torahislife.azurewebsites.net/api/ShiurRetriever?tags=${shiur.tags.map(tag => `tags=${tag.tag}`).join('&')}`;
-        window.location.href = `http://localhost:7071/api/Shiur?title=${shiur.title}&tags=${shiur.tags.map(tag => `tags=${tag.tag}`).join('&')}`;
+        window.location.href = `https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}`;
+        // window.location.href = `http://localhost:7071/api/ShiurRetriever?id=${shiur.id}`;
     }
 
 }

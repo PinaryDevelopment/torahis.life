@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Microsoft.Azure.WebJobs;
 
 namespace DataVersionMigrater
 {
@@ -19,13 +19,20 @@ namespace DataVersionMigrater
         {
             var v1Data = await GetV1Data().ConfigureAwait(false);
             var v2Data = TransformV1ToV2(v1Data);
-            SaveV2Data(v2Data);
+            await SaveV2Data(v2Data).ConfigureAwait(false);
         }
 
-        public static void SaveV2Data(V2Data v2Data)
+        public static async Task SaveV2Data(V2Data v2Data)
         {
-            var localFilePath = Path.Combine(Directory.GetCurrentDirectory(), "datav2.json");
-            File.WriteAllText(localFilePath, JsonSerializer.Serialize(v2Data));
+            var localFilePath = Path.Combine(Path.GetTempPath(), "data.json");
+            var data = JsonSerializer.Serialize(v2Data);
+            File.WriteAllText(localFilePath, data);
+            await StorageAccount.NewFromConnectionString("UseDevelopmentStorage=true")
+                                                     .CreateCloudBlobClient()
+                                                     .GetContainerReference("shiurim")
+                                                     .GetBlockBlobReference("data.json")
+                                                     .UploadTextAsync(data)
+                                                     .ConfigureAwait(false);
         }
 
         public static V2Data TransformV1ToV2(V1Data v1Data)
@@ -33,7 +40,7 @@ namespace DataVersionMigrater
             var tags = v1Data.shiurim
                              .Select(s => new[]
                              {
-                                new V2Tag { tag = s.author, type = V2TagType.Author },
+                                //new V2Tag { tag = s.author, type = V2TagType.Author },
                                 new V2Tag { tag = s.series, type = V2TagType.Series },
                                 new V2Tag { tag = s.subseries, type = V2TagType.Series }
                              }
@@ -42,7 +49,16 @@ namespace DataVersionMigrater
                              .GroupBy(s => s.tag)
                              .Select(g => g.First())
                              .ToArray();
-            var id = 0;
+            var id = 1;
+            foreach (var tag in tags)
+            {
+                tag.id = id++;
+            }
+            var authors = new V2Author[]
+            {
+                new V2Author { id = 1, name = "Rabbi Yosef Bromberg" }
+            };
+            id = 1;
             var shiurim =  v1Data.shiurim
                                  .Select(shiur =>
                                    shiur.versions
@@ -54,14 +70,15 @@ namespace DataVersionMigrater
                                                 title = shiur.title,
                                                 tags = new[]
                                                 {
-                                                    Array.FindIndex(tags, t => t.tag == shiur.author),
-                                                    Array.FindIndex(tags, t => t.tag == shiur.series),
-                                                    Array.FindIndex(tags, t => t.tag == shiur.subseries),
-                                                    Array.FindIndex(tags, t => t.tag == version.name)
+                                                    //Array.FindIndex(tags, t => t.tag == shiur.author),
+                                                    tags.First(t => t.tag == shiur.series).id,
+                                                    tags.First(t => t.tag == shiur.subseries).id,
+                                                    tags.First(t => t.tag == version.name).id
                                                 },
                                                 duration = version.duration,
                                                 date = date.ToString("s"),
-                                                id = id++
+                                                id = id++,
+                                                authorId = 1
                                             };
                                            }
                                         )
@@ -78,7 +95,8 @@ namespace DataVersionMigrater
             return new V2Data
             {
                 shiurim = shiurim,
-                tags = tags
+                tags = tags,
+                authors = authors
             };
         }
 
@@ -105,16 +123,22 @@ namespace DataVersionMigrater
     public enum V2TagType
     {
         Unknown = 0,
-        Author = 1,
-        Series = 2
+        Series = 1
     }
 
     public class V2Tag
     {
+        public int id { get; set; }
         //[JsonPropertyName("0")]
         public string tag { get; set; }
         //[JsonPropertyName("1")]
         public V2TagType type { get; set; }
+    }
+
+    public class V2Author
+    {
+        public int id { get; set; }
+        public string name { get; set; }
     }
 
     public class V2Data
@@ -123,6 +147,7 @@ namespace DataVersionMigrater
         public V2Tag[] tags { get; set; }
         //[JsonPropertyName("1")]
         public V2Shiur[] shiurim { get; set; }
+        public V2Author[] authors { get; set; }
     }
 
     public class V2Shiur
@@ -138,6 +163,7 @@ namespace DataVersionMigrater
         public int id { get; set; }
         public int? previousId { get; set; }
         public int? nextId { get; set; }
+        public int authorId { get; set; }
     }
 
     public class V1Data

@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -22,51 +24,45 @@ namespace FileUploadListener
             RootUrl = "https://www.torahis.life/daf-yomi/rabbi-yosef-bromberg/full"
         };
 
-        //[FunctionName("BrombergFullOriginalFileListener")]
-        //public static async Task BlobListener([BlobTrigger(StaticData.ShiurimContainerName + "/" + StaticData.UploadedFileRootContainerPath + "/{name}", Connection = "AzureWebJobsStorage")]ICloudBlob blob, string name, ILogger log, ExecutionContext context)
-        //{
-        //    log.LogInformation($"Executing directory: {context.FunctionAppDirectory}");
-        //    log.LogInformation($"Processing Name: {name}, Size: {blob.Properties.Length}b");
-        //    var podcastMetadata = RabbiYosefBrombergFull;
-        //    var audioFileService = new AudioFileService(blob, context);
-        //    await audioFileService.ProcessFile(podcastMetadata).ConfigureAwait(false);
+        private static readonly Dictionary<string, string> MimeTypeLookupByFileExtension = new Dictionary<string, string>
+        {
+            { ".mp3", "audio/mpeg" }
+        };
 
-        //    var audioFile = new AudioFileName(blob.Name);
-        //    await new GitHubClientWrapper(
-        //            Environment.GetEnvironmentVariable("GitHub.Owner", EnvironmentVariableTarget.Process),
-        //            Environment.GetEnvironmentVariable("GitHub.RepositoryName", EnvironmentVariableTarget.Process),
-        //            Environment.GetEnvironmentVariable("GitHub.PrivateKey", EnvironmentVariableTarget.Process),
-        //            Environment.GetEnvironmentVariable("GitHub.AppId", EnvironmentVariableTarget.Process),
-        //            Environment.GetEnvironmentVariable("GitHub.AppName", EnvironmentVariableTarget.Process)
-        //        ).CreatePostComment(podcastMetadata.Author, audioFile.RecordedOn, audioFile.Masechta, audioFile.Daf, audioFile.Subtitle, audioFileService.Duration).ConfigureAwait(false);
+        [FunctionName("BrombergFullOriginalFileListener")]
+        public static async Task BlobListener([BlobTrigger(StaticData.ShiurimContainerName + "/" + StaticData.UploadedFileRootContainerPath + "/{name}", Connection = "AzureWebJobsStorage")]ICloudBlob blob, string name, ILogger log, ExecutionContext context)
+        {
+            log.LogInformation($"Executing directory: {context.FunctionAppDirectory}");
+            log.LogInformation($"Processing Name: {name}, Size: {blob.Properties.Length}b");
+            var podcastMetadata = RabbiYosefBrombergFull;
+            var audioFileService = new AudioFileService(blob, context);
+            await audioFileService.ProcessFile(podcastMetadata).ConfigureAwait(false);
 
-        //    log.LogInformation($"Uploaded Name:{Path.GetFileName(audioFileService.OutgoingBlobReference.Name)}, Size: {audioFileService.OutgoingBlobReference.Properties.Length}b");
+            var audioFile = new AudioFileName(blob.Name);
+            //await new GitHubClientWrapper(
+            //        Environment.GetEnvironmentVariable("GitHub.Owner", EnvironmentVariableTarget.Process),
+            //        Environment.GetEnvironmentVariable("GitHub.RepositoryName", EnvironmentVariableTarget.Process),
+            //        Environment.GetEnvironmentVariable("GitHub.PrivateKey", EnvironmentVariableTarget.Process),
+            //        Environment.GetEnvironmentVariable("GitHub.AppId", EnvironmentVariableTarget.Process),
+            //        Environment.GetEnvironmentVariable("GitHub.AppName", EnvironmentVariableTarget.Process)
+            //    ).CreatePostComment(podcastMetadata.Author, audioFile.RecordedOn, audioFile.Masechta, audioFile.Daf, audioFile.Subtitle, audioFileService.Duration).ConfigureAwait(false);
 
-        //    if (audioFile.Subtitle.Equals("with Rashi", StringComparison.OrdinalIgnoreCase) && bool.Parse(Environment.GetEnvironmentVariable("ShouldSendEmail", EnvironmentVariableTarget.Process) ?? bool.FalseString))
-        //    {
-        //        await EmailerService.SendEmails(blob.Container, audioFile, audioFileService.OutgoingBlobReference).ConfigureAwait(false);
-        //    }
-        //}
+            log.LogInformation($"Uploaded Name:{Path.GetFileName(audioFileService.OutgoingBlobReference.Name)}, Size: {audioFileService.OutgoingBlobReference.Properties.Length}b");
+
+            await UpdateDataStore(audioFile, audioFileService.Duration).ConfigureAwait(false);
+
+            if (audioFile.Subtitle.Equals("with Rashi", StringComparison.OrdinalIgnoreCase) && bool.Parse(Environment.GetEnvironmentVariable("ShouldSendEmail", EnvironmentVariableTarget.Process) ?? bool.FalseString))
+            {
+                await EmailerService.SendEmails(blob.Container, audioFile, audioFileService.OutgoingBlobReference).ConfigureAwait(false);
+            }
+        }
 
         [FunctionName("ShiurRetriever")]
         public static async Task<IActionResult> ShiurRetriever([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
         {
-            //var name = req.Query["name"];
-            //log.LogInformation($"Requested Name: {name}");
-
-            //var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
-            //                              .CreateCloudBlobClient()
-            //                              .GetContainerReference(StaticData.ShiurimContainerName)
-            //                              .GetBlockBlobReference(name);
-            //using var ms = new MemoryStream();
-            //await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
-            //return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
-
-            var origin = req.Headers["Origin"];
-            // TODO: get this from config so prod version will only allow torahis.life?
-            if (origin == "http://localhost:9000" || origin == "https://torahis.life")
+            if (req.Headers["Origin"] == Environment.GetEnvironmentVariable("CORSUrl", EnvironmentVariableTarget.Process))
             {
-                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", req.Headers["Origin"]);
             }
 
             var id = int.Parse(req.Query["id"]);
@@ -74,17 +70,13 @@ namespace FileUploadListener
 
             var data = await GetData().ConfigureAwait(false);
             var shiur = data.shiurim.First(s => s.id == id);
-            var tags = data.tags.Where((t, i) => shiur.tags.Contains(i)).Select(t => t.tag).ToArray();
-            var blockBlob = StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
-                                          .CreateCloudBlobClient()
-                                          .GetContainerReference(StaticData.ShiurimContainerName)
-                                          .GetBlockBlobReference($"dist/{tags[0].ToLower().Replace(" ", string.Empty)}/{tags[1].ToLower().Replace(" ", string.Empty)}/{tags[3].ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags[2]} ({DateTime.ParseExact(shiur.date, "s", null).ToString("MMM d yyyy")}).mp3");
-            using var ms = new MemoryStream();
-            await blockBlob.DownloadToStreamAsync(ms).ConfigureAwait(false);
-            ms.Seek(0, 0);
-            return new FileContentResult(ms.ToArray(), "audio/mpeg") { FileDownloadName = Path.GetFileName(blockBlob.Name), EnableRangeProcessing = true };
+            var tags = data.tags.Where(t => shiur.tags.Contains(t.id)).Select(t => t.tag).ToArray();
+            var author = data.authors.First(a => a.id == shiur.authorId);
+            var fileName = $"dist/{author.name.ToLower().Replace(" ", string.Empty)}/{tags[0].ToLower().Replace(" ", string.Empty)}/{tags[2].ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags[1]} ({DateTime.ParseExact(shiur.date, "s", null):MMM d yyyy}).mp3";
+            var fileContents = await GetFile(fileName).ConfigureAwait(false);
+            
+            return new FileContentResult(fileContents, MimeTypeLookupByFileExtension[Path.GetExtension(fileName)]) { FileDownloadName = Path.GetFileName(fileName), EnableRangeProcessing = true };
         }
-    }
 
         //[FunctionName("EightMinuteDafConverter")]
         //public static async Task Run([TimerTrigger("0 0 10 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
@@ -101,72 +93,160 @@ namespace FileUploadListener
         {
             var data = await GetData().ConfigureAwait(false);
 
-            var origin = req.Headers["Origin"];
-            // TODO: get this from config so prod version will only allow torahis.life?
-            if (origin == "http://localhost:9000" || origin == "https://torahis.life")
+            if (req.Headers["Origin"] == Environment.GetEnvironmentVariable("CORSUrl", EnvironmentVariableTarget.Process))
             {
-                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", req.Headers["Origin"]);
             }
 
             if (req.Query.ContainsKey("id"))
             {
                 var id = int.Parse(req.Query["id"]);
-                return new JsonResult(new V2Data { shiurim = new[] { data.shiurim.First(s => s.id == id) }, tags = data.tags });
+                return new JsonResult(new V2Data { shiurim = new[] { data.shiurim.First(s => s.id == id) }, tags = data.tags, authors = data.authors });
             }
             else
             {
-                var tags = req.Query["tags"].Select(tag => tag.Replace("-", " "));
+                var tags = string.IsNullOrWhiteSpace(req.Query["tags"]) ? Enumerable.Empty<string>() : req.Query["tags"].Select(tag => tag.Replace("-", " "));
+                var authors = string.IsNullOrWhiteSpace(req.Query["authors"]) ? Enumerable.Empty<string>() : req.Query["authors"].Select(tag => tag.Replace("-", " "));
+                var titles = string.IsNullOrWhiteSpace(req.Query["titles"]) ? Enumerable.Empty<string>() : req.Query["titles"].Select(tag => tag.Replace("-", " "));
+
                 var tagIds = data.tags
-                                  .Select((Tag, Index) => (Tag, Index))
-                                  .Where(t => tags.Contains(t.Tag.tag, StringComparer.OrdinalIgnoreCase))
-                                  .Select(t => t.Index);
+                                 .Where(t => tags.Contains(t.tag, StringComparer.OrdinalIgnoreCase))
+                                 .Select(t => t.id);
                 var shiurim = data.shiurim.Where(s => tagIds.All(id => s.tags.Contains(id)));
 
-                return new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags });
+                return new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags, authors = data.authors });
             }
         }
 
         private static async Task<V2Data> GetData()
         {
-            // TODO: cache this a bit more
-            var serializedData = await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+            var cachedFilePath = Path.Combine(Path.GetTempPath(), "data.json");
+            string serializedData;
+            if (File.Exists(cachedFilePath))
+            {
+                serializedData = File.ReadAllText(cachedFilePath);
+            }
+            else
+            {
+                serializedData = await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
                                                      .CreateCloudBlobClient()
                                                      .GetContainerReference(StaticData.ShiurimContainerName)
                                                      .GetBlockBlobReference("data.json")
                                                      .DownloadTextAsync()
                                                      .ConfigureAwait(false);
-            var data = JsonSerializer.Deserialize<V2Data>(serializedData);
-            // TODO: move this to the data migrator project
-            var i = 1;
-            foreach (var shiur in data.shiurim)
-            {
-                shiur.id = i;
-                i++;
+                File.WriteAllText(cachedFilePath, serializedData);
             }
 
-            foreach (var shiur in data.shiurim)
+            return JsonSerializer.Deserialize<V2Data>(serializedData);
+        }
+
+        private static async Task<byte[]> GetFile(string fileName)
+        {
+            fileName = fileName.Replace("/", "\\");
+            var topLevelDirectory = Path.Combine(Path.GetTempPath(), "shiurim");
+            var cachedFilePath = Path.Combine(topLevelDirectory, fileName);
+
+            var fileDirectory = Path.GetDirectoryName(cachedFilePath);
+            if (!Directory.Exists(fileDirectory))
             {
-                shiur.previousId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id - 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id - 2 && s.title != shiur.title))?.id;
-                shiur.nextId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id + 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id + 2 && s.title != shiur.title))?.id;
+                Directory.CreateDirectory(fileDirectory);
             }
 
-            return data;
+            foreach (var filePath in Directory.GetFiles(topLevelDirectory, "*", SearchOption.AllDirectories).Where(filePath => filePath != fileName))
+            {
+                // only keep files cached for 7 days
+                if (File.GetLastWriteTime(filePath) < DateTime.Now.AddDays(-7))
+                {
+                    File.Delete(filePath);
+                }
+            }
+
+            if (!File.Exists(cachedFilePath))
+            {
+                await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+                                    .CreateCloudBlobClient()
+                                    .GetContainerReference(StaticData.ShiurimContainerName)
+                                    .GetBlockBlobReference(fileName)
+                                    .DownloadToFileAsync(cachedFilePath, FileMode.Create)
+                                    .ConfigureAwait(false);
+            }
+
+            using var fileStream = File.OpenRead(cachedFilePath);
+            byte[] fileBytes = new byte[fileStream.Length];
+            fileStream.Read(fileBytes, 0, fileBytes.Length);
+            
+            return fileBytes;
+        }
+
+        private static async Task UpdateDataStore(AudioFileName audioFile, TimeSpan duration)
+        {
+            var data = await GetData().ConfigureAwait(false);
+
+            var tagStrings = new[] { "Daf Yomi", audioFile.Masechta.ToUppercaseWords(), audioFile.Subtitle };
+
+            var unknownTags = tagStrings.Where(ts => data.tags.All(t => t.tag != ts));
+            if (unknownTags.Any())
+            {
+                var currentIdMax = data.tags.Max(t => t.id);
+                foreach (var unknownTag in unknownTags)
+                {
+                    data.tags.Append(new V2Tag
+                    {
+                        id = ++currentIdMax,
+                        tag = unknownTag,
+                        type = V2TagType.Series
+                    });
+                }
+            }
+
+            var shiur = new V2Shiur
+            {
+                date = audioFile.RecordedOn.ToString("s"),
+                title = $"Daf {audioFile.Daf}",
+                id = data.shiurim.Max(s => s.id) + 1,
+                tags = tagStrings.Select(str => data.tags.First(t => t.tag == str).id).ToArray(),
+                duration = duration.ToString("mm':'ss"),
+                authorId = data.authors.First(a => a.name.Equals(RabbiYosefBrombergFull.Author, StringComparison.OrdinalIgnoreCase)).id
+            };
+
+            shiur.previousId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id - 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id - 2 && s.title != shiur.title))?.id;
+            shiur.nextId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id + 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id + 2 && s.title != shiur.title))?.id;
+
+            data.shiurim = data.shiurim.Concat(new[] { shiur }).ToArray();
+
+            // TODO: save locally and to blob
+            var cachedFilePath = Path.Combine(Path.GetTempPath(), "data.json");
+            var serializedData = JsonSerializer.Serialize(data);
+            await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+                                .CreateCloudBlobClient()
+                                .GetContainerReference(StaticData.ShiurimContainerName)
+                                .GetBlockBlobReference("data.json")
+                                .UploadTextAsync(serializedData)
+                                .ConfigureAwait(false);
+
+            File.WriteAllText(cachedFilePath, serializedData);
         }
     }
 
     public enum V2TagType
     {
         Unknown = 0,
-        Author = 1,
-        Series = 2
+        Series = 1
     }
 
     public class V2Tag
     {
+        public int id { get; set; }
         //[JsonPropertyName("0")]
         public string tag { get; set; }
         //[JsonPropertyName("1")]
         public V2TagType type { get; set; }
+    }
+
+    public class V2Author
+    {
+        public int id { get; set; }
+        public string name { get; set; }
     }
 
     public class V2Data
@@ -175,6 +255,7 @@ namespace FileUploadListener
         public V2Tag[] tags { get; set; }
         //[JsonPropertyName("1")]
         public V2Shiur[] shiurim { get; set; }
+        public V2Author[] authors { get; set; }
     }
 
     public class V2Shiur
@@ -190,5 +271,6 @@ namespace FileUploadListener
         public string duration { get; set; }
         public int? previousId { get; set; }
         public int? nextId { get; set; }
+        public int authorId { get; set; }
     }
 }

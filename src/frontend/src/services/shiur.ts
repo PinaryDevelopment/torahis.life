@@ -6,4 +6,5 @@ export class Shiur {
     public id: number;
     public previousId?: number;
     public nextId?: number;
+    public authorId: number;
 }

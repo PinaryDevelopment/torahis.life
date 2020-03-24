@@ -1,5 +1,6 @@
 import { Tag } from './tag';
 import { TagType } from './tag-type.enum';
+import { Author } from './author';
 
 export class Shiur {
     public title: string;
@@ -9,8 +10,9 @@ export class Shiur {
     public id: number;
     public previousId?: number;
     public nextId?: number;
+    public author: Author;
 
-    constructor({ title = '', tags = [], date, duration = '', id, previousId, nextId }) {
+    constructor({ title = '', tags = [], date, duration = '', id, previousId, nextId, author }) {
         this.title = title;
         this.tags = tags;
         this.date = date;
@@ -18,10 +20,7 @@ export class Shiur {
         this.id = id;
         this.previousId = previousId;
         this.nextId = nextId;
-    }
-
-    public get author() {
-        return this.tags.find(tag => tag.type === TagType.Author).tag;
+        this.author = author;
     }
 
     public get series() {
