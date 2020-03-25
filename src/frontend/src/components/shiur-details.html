@@ -1,0 +1,16 @@
+<div class="shiurim-details-outer-container">
+    <div class="shiurim-details-inner-container">
+        <h3 class="title">${shiur.series[1]} - ${shiur.title}</h3>
+        <h4 class="series">${shiur.series[2]}</h4>
+        <div class="author">${shiur.author.name}</div>
+        <div class="date">${shiur.date.toDateString()}</div>
+        
+        <audio-player url="https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}"></audio-player>
+        <!-- <audio-player if.bind="shiur.id" url="http://localhost:7071/api/ShiurRetriever?id=${shiur.id}"></audio-player> -->
+
+        <div class="pager">
+            <button if.bind="shiur.previousId" goto="../shiur-details(${shiur.previousId})"><i class="icon">&#8592;</i>Previous</button>
+            <button if.bind="shiur.nextId" goto="../shiur-details(${shiur.nextId})"><i>&#8594;</i>Next</button>
+        </div>
+    </div>
+</div>

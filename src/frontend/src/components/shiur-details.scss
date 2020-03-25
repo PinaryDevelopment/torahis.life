@@ -1,0 +1,38 @@
+.shiurim-details-outer-container {
+    background-color: #efefef;
+    padding: 1em;
+    flex-grow: 1;
+    display: flex;
+}
+
+.shiurim-details-inner-container {
+    flex-grow: 1;
+    text-align: center;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pager {
+    display: flex;
+    justify-content: space-between;
+}
+
+audio-player {
+    flex-grow: 1;
+}
+
+.title {
+    margin-bottom: 0;
+}
+
+.series {
+    margin-top: 0;
+    font-style: italic;
+}
+
+.date {
+    font-size: .8rem;
+}

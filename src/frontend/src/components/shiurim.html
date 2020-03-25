@@ -1,0 +1,19 @@
+<template>
+    <template repeat.for="series of v2">
+        <h3 class="series title" id="${series.title.toLowerCase()}">${series.title}</h3>
+        <div class="series grid">
+            <div class="card" repeat.for="shiur of series.shiurim">
+                <span class="inner-border"></span>
+                <h3 class="title">${shiur.series} - ${shiur.title}</h3>
+                <div class="versions-container">
+                    <div class="version" repeat.for="version of shiur.versions">
+                        <a goto="../shiur-details(${shiur.id})">${version.version} (${version.duration})</a>
+                        <button type="button" title="Download the shiur" click.delegate="downloadShiur(version.shiur)">&#8891;</button>
+                    </div>
+                </div>
+                <div class="author">${shiur.author.name}</div>
+                <div class="date">${shiur.date.toDateString()}</div>
+            </div>
+        </div>
+    </template>
+</template>

@@ -1,10 +1,10 @@
 <audio autoplay durationchange.trigger="updateDuration($event.target)" timeupdate.trigger="updateCurrentTime($event.target)" ref="audioElement">
     <source src.bind="url" type="audio/mpeg" />
 </audio>
- 
 
-<input class="current-time" title="location" type="range" min="0" max="100" value="0" class="slider" step=".001" input.delegate="slideTimeUpdate($event.target.value)" />
-<div>${currentLocation} - ${totalLength}</div>
+
+<input class="current-time slider" title="location" type="range" min="0" max="100" value="0" step=".001" input.delegate="slideTimeUpdate($event.target.value)" />
+<div class="duration">${currentLocation} - ${totalLength}</div>
 
 <div class="controls">
     <button type="button" click.delegate="goToBeginning()" title="go to beginning">
@@ -32,7 +32,17 @@
     </button>
 
     <div class="volume">
-        <i class="icon">&#128362;</i>
+        <i class="icon" if.bind="volume !== 0" click.delegate="toggleVolume()">&#128362;</i>
+        <i class="icon" if.bind="volume === 0" click.delegate="toggleVolume()">&#10680;</i>
         <input title="volume" type="range" min="0" max="100" value.bind="volume" class="slider" input.delegate="updateVolume($event.target.value)" />
+    </div>
+</div>
+
+<div if.bind="isLoading" class="loading-container">
+    <div class="sk-folding-cube">
+        <div class="sk-cube1 sk-cube"></div>
+        <div class="sk-cube2 sk-cube"></div>
+        <div class="sk-cube4 sk-cube"></div>
+        <div class="sk-cube3 sk-cube"></div>
     </div>
 </div>

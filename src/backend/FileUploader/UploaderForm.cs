@@ -1,5 +1,6 @@
 ﻿using Data;
 using Microsoft.WindowsAzure.Storage;
+using System;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
@@ -49,7 +50,11 @@ namespace FileUploader
                     }
                     cloudFilePath = Path.Combine(cloudFilePath, $"Daf {daf}-{shiur.Version}-{date.ToString("yyyy.MM.dd")}{Path.GetExtension(originalFileName).ToLowerInvariant()}");
                     var blockBlobReference = containerReference.GetBlockBlobReference(cloudFilePath);
-                    blockBlobReference.UploadFromStreamAsync(fileDialog.OpenFile()).ConfigureAwait(false).GetAwaiter().GetResult();
+                    using (var fileStream = fileDialog.OpenFile())
+                    {
+                        blockBlobReference.UploadFromStreamAsync(fileStream).ConfigureAwait(false).GetAwaiter().GetResult();
+                    }
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(fileDialog.FileName, Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
                     Application.Exit();
                 };
             };
@@ -89,6 +94,11 @@ namespace FileUploader
             Controls.Find<ComboBox>(TitleInputKey).SelectedIndexChanged += (a, b) => UpdateSubtitleComboBoxOptions();
             Controls.Find<ComboBox>(SubtitleInputKey).SelectedIndexChanged += (a, b) => UpdateDafComboBoxOptions();
             Controls.Find<ComboBox>(AuthorInputKey).SelectedIndex = 0;
+
+            var (Masechta, Daf) = StaticData.CalculateDafForDate(DateTime.Now);
+            Controls.Find<ComboBox>(TitleInputKey).SelectedIndex = Controls.Find<ComboBox>(TitleInputKey).Items.IndexOf($"Daf Yomi - {Masechta}");
+            Controls.Find<ComboBox>(SubtitleInputKey).SelectedIndex = Controls.Find<ComboBox>(SubtitleInputKey).Items.IndexOf(DateTime.Now.Hour > 12 ? "without Rashi" : "with Rashi");
+            Controls.Find<ComboBox>(DafInputKey).SelectedIndex = Controls.Find<ComboBox>(DafInputKey).Items.IndexOf($"{Daf}");
 
             Control control = new Label { Text = "Date", Height = controlHeight, Width = labelWidth, Visible = true, Location = new Point(paddingSize, y) };
             Controls.Add(control);
