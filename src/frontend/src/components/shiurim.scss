@@ -7,14 +7,6 @@
     padding: 16px;
 }
 
-@media (max-width: 459px) {
-    .series.grid {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
 .card {
   --card-height: 175px;
   --card-width: 230px;
