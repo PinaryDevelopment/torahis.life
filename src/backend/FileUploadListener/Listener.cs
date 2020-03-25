@@ -93,6 +93,8 @@ namespace FileUploadListener
         {
             var data = await GetData().ConfigureAwait(false);
 
+            log.LogInformation(req.Headers["Origin"]);
+            log.LogInformation(Environment.GetEnvironmentVariable("CORSUrl", EnvironmentVariableTarget.Process));
             if (req.Headers["Origin"] == Environment.GetEnvironmentVariable("CORSUrl", EnvironmentVariableTarget.Process))
             {
                 req.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", req.Headers["Origin"]);
