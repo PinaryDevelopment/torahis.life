@@ -5,7 +5,7 @@
         <div class="author">${shiur.author.name}</div>
         <div class="date">${shiur.date.toDateString()}</div>
         
-        <audio-player url="https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}"></audio-player>
+        <audio-player if.bind="shiur.id" url="https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}"></audio-player>
         <!-- <audio-player if.bind="shiur.id" url="http://localhost:7071/api/ShiurRetriever?id=${shiur.id}"></audio-player> -->
 
         <div class="pager">
