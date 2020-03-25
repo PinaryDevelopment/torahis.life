@@ -24,6 +24,6 @@ export class Shiur {
     }
 
     public get series() {
-        return this.tags.filter(tag => tag.type === TagType.Series).map(tag => tag.tag);
+        return this.tags.map(tag => tag.tag);
     }
 }
