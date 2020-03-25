@@ -70,9 +70,9 @@ namespace FileUploadListener
 
             var data = await GetData().ConfigureAwait(false);
             var shiur = data.shiurim.First(s => s.id == id);
-            var tags = data.tags.Where(t => shiur.tags.Contains(t.id)).Select(t => t.tag).ToArray();
+            var tags = data.tags.Where(t => shiur.tags.Contains(t.id)).ToArray();
             var author = data.authors.First(a => a.id == shiur.authorId);
-            var fileName = $"dist/{author.name.ToLower().Replace(" ", string.Empty)}/{tags[0].ToLower().Replace(" ", string.Empty)}/{tags[2].ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags[1]} ({DateTime.ParseExact(shiur.date, "s", null):MMM d yyyy}).mp3";
+            var fileName = $"dist/{author.name.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel1).tag.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel2).tag.ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags.First(t => t.type == V2TagType.SeriesLevel3).tag} ({DateTime.ParseExact(shiur.date, "s", null):MMM d yyyy}).mp3";
             var fileContents = await GetFile(fileName).ConfigureAwait(false);
             
             return new FileContentResult(fileContents, MimeTypeLookupByFileExtension[Path.GetExtension(fileName)]) { FileDownloadName = Path.GetFileName(fileName), EnableRangeProcessing = true };
@@ -118,6 +118,20 @@ namespace FileUploadListener
 
                 return new JsonResult(new V2Data { shiurim = shiurim.ToArray(), tags = data.tags, authors = data.authors });
             }
+        }
+
+        [FunctionName("RefreshCache")]
+        public static async Task<IActionResult> RefreshCache([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
+        {
+            var cachedFilePath = Path.Combine(Path.GetTempPath(), "data.json");
+            var serializedData = await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))
+                                                     .CreateCloudBlobClient()
+                                                     .GetContainerReference(StaticData.ShiurimContainerName)
+                                                     .GetBlockBlobReference("data.json")
+                                                     .DownloadTextAsync()
+                                                     .ConfigureAwait(false);
+            File.WriteAllText(cachedFilePath, serializedData);
+            return new OkResult();
         }
 
         private static async Task<V2Data> GetData()
@@ -196,7 +210,7 @@ namespace FileUploadListener
                     {
                         id = ++currentIdMax,
                         tag = unknownTag,
-                        type = V2TagType.Series
+                        type = V2TagType.SeriesLevel2
                     });
                 }
             }
@@ -233,7 +247,9 @@ namespace FileUploadListener
     public enum V2TagType
     {
         Unknown = 0,
-        Series = 1
+        SeriesLevel1 = 1,
+        SeriesLevel2 = 2,
+        SeriesLevel3 = 3
     }
 
     public class V2Tag

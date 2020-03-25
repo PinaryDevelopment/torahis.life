@@ -7,7 +7,7 @@ Aurelia.register(
     JitHtmlBrowserConfiguration,
     StyleConfiguration.cssModulesProcessor(),
     components,
-    RouterConfiguration.customize({useUrlFragmentHash: false}),
+    RouterConfiguration.customize(),
 )
 .app(App)
 .start();
