@@ -225,12 +225,20 @@ namespace FileUploadListener
                 authorId = data.authors.First(a => a.name.Equals(RabbiYosefBrombergFull.Author, StringComparison.OrdinalIgnoreCase)).id
             };
 
-            shiur.previousId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id - 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id - 2 && s.title != shiur.title))?.id;
-            shiur.nextId = data.shiurim.FirstOrDefault(s => (s.id == shiur.id + 1 && s.title != shiur.title && s.tags[2] == shiur.tags[2]) || (s.id == shiur.id + 2 && s.title != shiur.title))?.id;
+            var (previousMasechta, previousDaf) = StaticData.CalculateDafForDate(audioFile.RecordedOn.AddDays(-1));
+            var previousShiurim = data.shiurim.Where(s => s.title == $"Daf {previousDaf}" && s.tags.Contains(data.tags.First(t => t.tag.Equals(previousMasechta, StringComparison.OrdinalIgnoreCase)).id));
+            foreach (var previousShiur in previousShiurim)
+            {
+                if (previousShiur.tags.All(tag => shiur.tags.Contains(tag)) || previousShiur.nextId == null)
+                {
+                    previousShiur.nextId = shiur.id;
+                }
+            }
+
+            shiur.previousId = previousShiurim.Count() == 1 ? previousShiurim.First().id : previousShiurim.FirstOrDefault(ps => ps.tags.All(tag => shiur.tags.Contains(tag))).id;
 
             data.shiurim = data.shiurim.Concat(new[] { shiur }).ToArray();
 
-            // TODO: save locally and to blob
             var cachedFilePath = Path.Combine(Path.GetTempPath(), "data.json");
             var serializedData = JsonSerializer.Serialize(data);
             await StorageAccount.NewFromConnectionString(Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process))

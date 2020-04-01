@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadListener", "FileU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManualBlobUpdater", "ManualBlobUpdater\ManualBlobUpdater.csproj", "{900C22E8-28B1-44F6-BB3E-F7666A6793F5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42D0308F-F3A5-4B84-BEBE-21DEB47AAFF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{900C22E8-28B1-44F6-BB3E-F7666A6793F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{900C22E8-28B1-44F6-BB3E-F7666A6793F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{900C22E8-28B1-44F6-BB3E-F7666A6793F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{900C22E8-28B1-44F6-BB3E-F7666A6793F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
