@@ -78,16 +78,6 @@ namespace FileUploadListener
             return new FileContentResult(fileContents, MimeTypeLookupByFileExtension[Path.GetExtension(fileName)]) { FileDownloadName = Path.GetFileName(fileName), EnableRangeProcessing = true };
         }
 
-        //[FunctionName("EightMinuteDafConverter")]
-        //public static async Task Run([TimerTrigger("0 0 10 * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
-        //{
-        //    log.LogInformation($"Timer executed at: {DateTime.Now}. To process today's eight minute daf.");
-
-        //    await VideoFileService.ProcessFile(context).ConfigureAwait(false);
-
-        //    log.LogInformation($"Eight minute daf processed {DateTime.Now}.");
-        //}
-
         [FunctionName("ShiurInfo")]
         public static async Task<IActionResult> ShiurInfo([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req, ILogger log)
         {
@@ -219,9 +209,9 @@ namespace FileUploadListener
             {
                 date = audioFile.RecordedOn.ToString("s"),
                 title = $"Daf {audioFile.Daf}",
-                id = data.shiurim.Max(s => s.id) + 1,
+                id = (data.shiurim.Any() ? data.shiurim.Max(s => s.id) : 0) + 1,
                 tags = tagStrings.Select(str => data.tags.First(t => t.tag == str).id).ToArray(),
-                duration = duration.ToString("mm':'ss"),
+                duration = duration > TimeSpan.FromHours(1) ? duration.ToString("hh':'mm':'ss") : duration.ToString("mm':'ss"),
                 authorId = data.authors.First(a => a.name.Equals(RabbiYosefBrombergFull.Author, StringComparison.OrdinalIgnoreCase)).id
             };
 
@@ -235,7 +225,7 @@ namespace FileUploadListener
                 }
             }
 
-            shiur.previousId = previousShiurim.Count() == 1 ? previousShiurim.First().id : previousShiurim.FirstOrDefault(ps => ps.tags.All(tag => shiur.tags.Contains(tag))).id;
+            shiur.previousId = previousShiurim.Count() == 1 ? previousShiurim.First().id : previousShiurim.FirstOrDefault(ps => ps.tags.All(tag => shiur.tags.Contains(tag)))?.id;
 
             data.shiurim = data.shiurim.Concat(new[] { shiur }).ToArray();
 

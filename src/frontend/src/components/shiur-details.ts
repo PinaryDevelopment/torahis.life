@@ -13,10 +13,4 @@ export class ShiurDetails {
             .getShiur(parameters.id)
             .then(shiur => this.shiur = shiur);
     }
-
-    // public getVersionLocation(version: Version): string {
-    //     return encodeURIComponent(`dist/${this.normalize(this.author)}/${this.normalize(this.series)}/${this.normalize(this.subseries)}/${this.title} - ${this.versions.find(v => v.name === version.name).name} (${this.date}).mp3`);
-    //   }
-
-    //   private normalize = (str: string) => str.replace(/\s/g, '').toLocaleLowerCase();
 }

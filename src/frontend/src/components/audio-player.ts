@@ -97,10 +97,20 @@ export class AudioPlayer {
     }
 
     private createTimeSpan(timeInSeconds: number) {
-        let minutes = Math.floor((timeInSeconds / 60)).toFixed(0);
-        let seconds = Math.floor((timeInSeconds % 60)).toFixed(0);
-        minutes = minutes.length === 1 ? `0${minutes}` : minutes;
-        seconds = seconds.length === 1 ? `0${seconds}` : seconds;
-        return `${minutes}:${seconds}`;
+        let minutes = Math.floor(timeInSeconds / 60);
+        let seconds = Math.floor((timeInSeconds % 60));
+
+        if (minutes >= 60) {
+            let hours = Math.floor(minutes / 60);
+            minutes = Math.floor(minutes % 60);
+            return `${this.toFixedTimeString(hours)}:${this.toFixedTimeString(minutes)}:${this.toFixedTimeString(seconds)}`
+        }
+        
+        return `${this.toFixedTimeString(minutes)}:${this.toFixedTimeString(seconds)}`;
+    }
+
+    private toFixedTimeString(timeUnit: number) {
+        const timeUnitString = timeUnit.toFixed(0);
+        return timeUnitString.length === 1 ? `0${timeUnitString}` : timeUnitString;
     }
 }
