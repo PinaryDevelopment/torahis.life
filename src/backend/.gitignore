@@ -1,8 +1,5 @@
 .vs/
-bin/
-obj/
-
-*.user
-local.settings.json
-App.config
-launchSettings.json
+[Bb]in/
+certificates/
+files/
+[Oo]bj/

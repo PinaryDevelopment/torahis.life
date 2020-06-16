@@ -1,0 +1,8 @@
+**/bin
+**/obj
+
+.dockerignore
+.gitignore
+dockerfile
+
+local.settings.json
