@@ -1,8 +1,11 @@
-**/bin
-**/obj
+.vscode/
+/*/bin/
+/*/obj/
+Tests/Manual/
 
 .dockerignore
 .gitignore
-dockerfile
+[dD]ockerfile
+readme.md
 
 local.settings.json

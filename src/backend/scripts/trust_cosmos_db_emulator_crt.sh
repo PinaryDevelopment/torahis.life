@@ -28,5 +28,27 @@ if [ -f "$CERT_TO_TRUST" ]; then
     rm $CERT_TO_TRUST;
 fi
 
+#######################################################################################################################################################
+# if [ -n "$1" ]; then
+#     LOCALHOST_PFX=$1
+# else
+#     LOCALHOST_PFX="/certificates/localhost.pfx"
+# fi
+# LOCALHOST_PFX_PASSWORD="SuperSecret"
+# CERT_TO_TRUST="localhost.crt"
+
+# # Generate .crt file if pfx exists
+# if [ -f "$LOCALHOST_PFX" ]; then
+#     openssl pkcs12 -in $LOCALHOST_PFX -clcerts -nokeys -out localhost.crt -passin pass:$LOCALHOST_PFX_PASSWORD;
+# fi
+
+# # # Trust Cert (will end located in /etc/ssl/certs/ based on *.crt name as a *.pem, e.g. /etc/ssl/certs/cosmosdbemulator.pem for cosmosdbemulator.crt)
+# if [ -f "$CERT_TO_TRUST" ]; then
+#     cp $CERT_TO_TRUST /usr/local/share/ca-certificates/
+#     update-ca-certificates
+#     rm $CERT_TO_TRUST;
+# fi
+#######################################################################################################################################################
+
 # Restore working directory
 popd

@@ -11,3 +11,8 @@ $dockerImageCertInstallerScriptLocation = "$PSScriptRoot\trust_cosmos_db_emulato
 $dockerImageCertInstallerScript = Get-Content $dockerImageCertInstallerScriptLocation -Delimiter "%"
 $dockerImageCertInstallerScript = $dockerImageCertInstallerScript -replace '(COSMOS_DB_EMULATOR_PFX_PASSWORD="(.*)")',"COSMOS_DB_EMULATOR_PFX_PASSWORD=`"$($plaintextpassword)`""
 Set-Content $dockerImageCertInstallerScriptLocation $dockerImageCertInstallerScript -NoNewline
+
+# $certFriendlyName = "IIS Express Development Certificate"
+# $dockerCertificatesPath = Join-Path (Split-Path -Path $PSScriptRoot -Parent) "certificates"
+# $localhostPfxCertificatePath = "$($dockerCertificatesPath)\localhost.pfx"
+# Get-ChildItem -path Cert:\LocalMachine\My -Recurse | Where-Object {$_.FriendlyName -eq $certFriendlyName} | Export-PfxCertificate -Filepath $localhostPfxCertificatePath -Password $password

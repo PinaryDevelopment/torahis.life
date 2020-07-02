@@ -4,11 +4,24 @@ ARG COSMOS_CONNECTION_STRING="AccountEndpoint=https://host.docker.internal:8081/
 ARG LOCAL_FILES_STORAGE_PATH="/app/files"
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-COPY . /src
-RUN mkdir -p /dist
+COPY *.sln */*.csproj /src/
 WORKDIR /src
-RUN dotnet restore *.csproj
-RUN dotnet publish *.csproj --output /dist
+RUN for file in ./*.csproj; \
+    do \
+    projectname=${file%.*}; \
+    mkdir -p "/src/$projectname"; \
+    cp $file "/src/$projectname"; \
+    rm $file; \
+    done
+
+RUN dotnet restore *.sln
+
+COPY . /src
+WORKDIR /src
+RUN dotnet publish --no-restore -c Release -f netcoreapp3.1 -r linux-x64 -o /dist/Apis Apis/Apis.csproj
+RUN dotnet publish --no-restore -c Release -f netcoreapp3.1 -r linux-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true -o /dist/DataStores.Migrations DataStores.Migrations/DataStores.Migrations.csproj
+
+
 
 FROM mcr.microsoft.com/azure-functions/dotnet:3.0-appservice
 ARG ENVIRONMENT
@@ -22,14 +35,23 @@ ENV AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 ENV AzureWebJobsStorage=${STORAGE_CONNECTION_STRING}
 ENV AzureCosmosConnectionString=${COSMOS_CONNECTION_STRING}
 ENV ASPNETCORE_URLS=http://+:80
+# ENV ASPNETCORE_URLS=https://+:443;http://+:80
 ENV LocalFilesStoragePath=LOCAL_FILES_STORAGE_PATH
+# ENV ASPNETCORE_Kestrel__Certificates__Default__Password="SuperSecret"
+# ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/certificates/localhost.pfx
 
 VOLUME [ ${LOCAL_FILES_STORAGE_PATH} ]
 EXPOSE 80
+# EXPOSE 443
 
 COPY ["/scripts/", "/scripts/"]
 COPY ["/certificates/", "/certificates/"]
 RUN /scripts/trust_cosmos_db_emulator_crt.sh
 
-COPY --from=build ["/dist", "/app/wwwroot"]
+# COPY --from=build ["/dist/DataStores.Migrations", "/app/DataStores.Migrations"]
+# WORKDIR /app/DataStores.Migrations
+# RUN ["dotnet", "DataStores.Migrations.dll"]
+
+COPY --from=build ["/dist/Apis", "/app/wwwroot"]
 WORKDIR /app/wwwroot
+# ENTRYPOINT ["/azure-functions-host/Microsoft.Azure.WebJobs.Script.WebHost", "--cert", "/certificates/localhost.pfx", "--password", "SuperSecret", "--useHttps" ]

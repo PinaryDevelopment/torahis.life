@@ -17,7 +17,7 @@ Function Start-AzureStorage(
 
     if (([System.Diagnostics.Process]::GetProcessesByName("AzureStorageEmulator")).Length -eq 0) {
         Write-Host "Starting Azure Storage Emulator."
-        Start-Process -FilePath "AzureStorageEmulator.exe" -ArgumentList "start" -WorkingDirectory "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator"
+        Invoke-Expression "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe start"
     }
 }
 
