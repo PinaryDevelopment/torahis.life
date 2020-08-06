@@ -3,15 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, throwError } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
-/* tslint:disable-next-line:no-any */
-declare let gapi: any;
+import * as env from '../../environments/environment';
 
-export interface IUser {
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  avatarUrl: string;
-}
+import { UserProfileService, UserProfile } from '../core/user-profile.service';
+
+declare let gapi: {
+  auth2: {
+    getAuthInstance: () => {
+      signIn: (options: { prompt: 'select_account' }) => Promise<{ getAuthResponse: (b: boolean) => { id_token: string } }>
+    }
+  },
+  client: {
+    init: (options: { clientId: string, scope: string, cookiepolicy: string }) => Promise<unknown>
+  },
+  load: (str: 'client:auth2', callback: () => void) => void
+};
 
 @Injectable({
   providedIn: 'root',
@@ -19,21 +25,31 @@ export interface IUser {
 export class AuthService {
   isLoggedIn = false;
   redirectUrl = '';
-  user?: IUser;
+  user: UserProfile | null;
   authorizationToken?: string;
 
-  constructor(private httpClient: HttpClient, private ngZone: NgZone) {
-    this.loadGapiScript()
-        .pipe(
-          switchMap(() => this.loadClient()),
-          switchMap(() => this.initializeClient()),
-          take(1)
-        )
-        .subscribe(
-          next => console.log('next: ', next),
-          error => console.log('error: ', error),
-          () => console.log('complete.')
-        );
+  constructor(
+    private httpClient: HttpClient,
+    private ngZone: NgZone,
+    private userProfileService: UserProfileService
+  ) {
+    this.user = userProfileService.get();
+    this.isLoggedIn = this.user !== null;
+  }
+
+  login(): Observable<unknown> {
+    return this.loadGapiScript()
+               .pipe(
+                 switchMap(() => this.loadClient()),
+                 switchMap(() => this.initializeClient()),
+                 switchMap(() => this.oAuthLogin())
+               );
+  }
+
+  logout(): void {
+    this.isLoggedIn = false;
+    this.user = null;
+    this.userProfileService.clear();
   }
 
   private loadGapiScript(): Observable<unknown> {
@@ -64,7 +80,7 @@ export class AuthService {
     const clientIsInitialized = new Subject();
     gapi.client
         .init({
-            clientId: 'xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxx.xxxxxxxxxxxxxxxxx.xxx',
+            clientId: env.environment.auth.google.clientId,
             scope: 'email profile openid',
             cookiepolicy: 'single_host_origin'
         })
@@ -72,34 +88,31 @@ export class AuthService {
     return clientIsInitialized.asObservable();
   }
 
-  login(): Observable<unknown> {
+  private oAuthLogin(): Observable<unknown> {
     const sub = new Subject<unknown>();
+
     gapi.auth2
         .getAuthInstance()
         .signIn({
           prompt: 'select_account'
         })
         /* currentUser can also be retrieved through gapi.auth2.getAuthInstance().currentUser.get() */
-        .then((currentUser: { getAuthResponse: (b: boolean) => { id_token: string } }) => {
+        .then(currentUser => {
           const backendToken = currentUser.getAuthResponse(true)
                                           .id_token;
           this.httpClient
-              .post<{ user: IUser, authorizationToken: string }>('http://localhost:613/api/auth/login', backendToken)
+              .post<{ user: UserProfile, authorizationToken: string }>(`${env.environment.baseApisUri}/auth/login`, backendToken)
               .pipe(take(1))
               .subscribe(({ user, authorizationToken }) =>
                 this.ngZone.run(() => {
+                  this.userProfileService.set(user);
                   this.user = user;
                   this.authorizationToken = authorizationToken;
-                  this.isLoggedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+                  this.isLoggedIn = true; // gapi.auth2.getAuthInstance().isSignedIn.get();
                   sub.next();
                 }));
         })
-        /* tslint:disable-next-line:no-any */
-        .catch((err: any) => sub.error(err));
+        .catch((err: unknown) => sub.error(err));
     return sub.asObservable();
-  }
-
-   logout(): void {
-    this.isLoggedIn = false;
   }
 }

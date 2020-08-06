@@ -7,8 +7,7 @@ import { Observable } from 'rxjs';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService) {}
 
-  /* tslint:disable-next-line:no-any */
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (this.auth.authorizationToken) {
       return next.handle(
         req.clone({

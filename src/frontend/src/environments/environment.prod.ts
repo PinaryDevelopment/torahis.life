@@ -1,3 +1,9 @@
 export const environment = {
-  production: true
+  production: true,
+  auth: {
+    google: {
+      clientId: '.apps.googleusercontent.com'
+    }
+  },
+  baseApisUri: ''
 };

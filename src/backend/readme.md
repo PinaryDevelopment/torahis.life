@@ -5,7 +5,7 @@
 
 ## Docker
  - Build image: docker build -t temp .
- - Run image with emulators: docker run -it -p 613:80 temp
+ - Run image with emulators: docker run -it -p 613:80 -v C:\Users\{USER_NAME}\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets temp
  - Run image with local file storage: docker run -it -p 613:80 -v $(pwd)\files:/app/files temp
  - Azure storage emulator image: https://hub.docker.com/_/microsoft-azure-storage-azurite?tab=description
  - Azure cosmos emulator image?: https://hub.docker.com/r/microsoft/azure-cosmosdb-emulator/ (windows image only)

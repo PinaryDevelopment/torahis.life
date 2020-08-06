@@ -8,26 +8,24 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 
 namespace PinaryDevelopment.Apis
 {
     public class AuthApi
     {
-        private readonly IDataProtector _protector;
+        private readonly IDataProtector Protector;
+        private readonly IConfiguration Configuration;
         
-        public AuthApi(IDataProtectionProvider provider)
+        public AuthApi(IDataProtectionProvider provider, IConfiguration configuration)
         {
-            _protector = provider.CreateProtector(GetType().FullName);
+            Protector = provider.CreateProtector(GetType().FullName);
+            Configuration = configuration;
         }
 
         [FunctionName("Login")]
         public async Task<IActionResult> Login([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "auth/login")]HttpRequest request, ILogger log)
         {
-            if (request.Cookies.TryGetValue("pd_user", out var value))
-            {
-                System.Console.WriteLine(value);
-            }
-
             // if (request.Headers["Origin"] == Environment.GetEnvironmentVariable("CORSUrl", EnvironmentVariableTarget.Process))
             // {
                 request.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", request.Headers["Origin"]);
@@ -50,12 +48,19 @@ namespace PinaryDevelopment.Apis
                 return new UnauthorizedResult();
             }
 
-            var subToken = new { FirstName = tokenInfo.FirstName, LastName = tokenInfo.LastName, FullName = tokenInfo.FullName, AvatarUrl = tokenInfo.picture };
+            var subToken = new
+            {
+                FirstName = tokenInfo.FirstName,
+                LastName = tokenInfo.LastName,
+                FullName = tokenInfo.FullName,
+                AvatarUrl = tokenInfo.picture,
+                Expires = tokenInfo.exp
+            };
 
             return new JsonResult(new
             {
                 User = subToken,
-                AuthorizationToken = _protector.Protect(JsonSerializer.Serialize(subToken))
+                AuthorizationToken = Protector.Protect(JsonSerializer.Serialize(subToken))
             });
         }
 
@@ -66,14 +71,14 @@ namespace PinaryDevelopment.Apis
             request.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", request.Headers["Origin"]);
             request.HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization");
 
-            var a = request.Headers["Authorization"];
+            // var a = request.Headers["Authorization"];
 
-            if (a.Count > 0)
-            {
-                System.Console.WriteLine("test");
-                System.Console.WriteLine(_protector.Unprotect(a[0]));
-            }
+            // if (a.Count > 0)
+            // {
+            //     System.Console.WriteLine(Protector.Unprotect(a[0]));
+            // }
 
+            // System.Console.WriteLine(Configuration.GetValue<string>("Auth:Google:ClientId"));
             return new OkResult();
         }
     }

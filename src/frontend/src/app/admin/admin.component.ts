@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, IUser } from '../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { UserProfile } from '../core/user-profile.service';
+
+import * as env from '../../environments/environment';
 
 @Component({
   selector: 'pd-admin',
@@ -8,10 +11,10 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  user?: IUser;
+  user: UserProfile | null = null;
 
   constructor(private authService: AuthService, private httpClient: HttpClient) {
-    this.httpClient.get('http://localhost:613/api/auth/test').subscribe();
+    this.httpClient.get(`${env.environment.baseApisUri}/auth/test`).subscribe();
   }
 
   ngOnInit(): void {

@@ -39,8 +39,13 @@ ENV ASPNETCORE_URLS=http://+:80
 ENV LocalFilesStoragePath=LOCAL_FILES_STORAGE_PATH
 # ENV ASPNETCORE_Kestrel__Certificates__Default__Password="SuperSecret"
 # ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/certificates/localhost.pfx
+# ENV ASPNETCORE_HTTPS_PORT=443
 
-VOLUME [ ${LOCAL_FILES_STORAGE_PATH} ]
+# user secrets path value pulled from C:\Users\{user_name}\.nuget\packages\microsoft.visualstudio.azure.containers.tools.targets\1.10.9\tools\Microsoft.VisualStudio.Containers.Tools.Shared.dll#ContainerLaunchManager.cs
+VOLUME [ \
+    ${LOCAL_FILES_STORAGE_PATH}, \
+    "/root/.microsoft/usersecrets" \
+]
 EXPOSE 80
 # EXPOSE 443
 
