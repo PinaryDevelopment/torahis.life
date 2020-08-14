@@ -19,7 +19,7 @@ namespace FileUploadListener
             var from = new EmailAddress(fromEmail[0], fromEmail[1]);
             var subject = $"{audioFile.Masechta.ToUppercaseWords()} Daf {audioFile.Daf}";
             var plainTextContent = $"{audioFile.Masechta.ToUppercaseWords()} Daf {audioFile.Daf} is now available. https://torahis.life/#/shiurim(daf-yomi&shabbos)";
-            var htmlContent = $"<a href=\"https://torahis.life/#/shiurim(daf-yomi&shabbos)\">{audioFile.Masechta.ToUppercaseWords()} Daf {audioFile.Daf}</a> is now available.";
+            var htmlContent = $"<a href=\"https://torahis.life/#/shiurim(daf-yomi&{audioFile.Masechta.ToUrlWords()})\">{audioFile.Masechta.ToUppercaseWords()} Daf {audioFile.Daf}</a> is now available.";
             var groupedRecipients = emailList.Skip(1)
                                              .Select(line => line.Split(','))
                                              .Select(lineParts => (bool.Parse(string.IsNullOrWhiteSpace(lineParts[2]) ? bool.FalseString : lineParts[2]), new EmailAddress(lineParts[0], lineParts[1])))

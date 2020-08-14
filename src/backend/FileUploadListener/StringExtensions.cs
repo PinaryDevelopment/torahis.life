@@ -23,5 +23,25 @@
 
             return new string(array);
         }
+
+        public static string ToUrlWords(this string value)
+        {
+            char[] array = value.ToCharArray();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (char.IsUpper(array[i]))
+                {
+                    array[i] = char.ToLower(array[i]);
+                }
+
+                if (array[i] == ' ')
+                {
+                    array[i] = '-';
+                }
+            }
+
+            return new string(array);
+        }
     }
 }
