@@ -1,1 +1,40 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    /*
+        UPDATE TO
+        primary-brand-color-rgb: 31, 23, 1;
+        primary-brand-color: RGB(var(--primary-brand-color-rgb));
+
+        secondary-brand-color: #dad8d0;
+
+        ALLOWS FOR(and for switching things out with 'dark' mode')
+        --primary-background-color: #fff;
+        --accent-background-color: #efefef; // background for outer padding
+        --primary-color: --primary-brand-color;
+        --secondary-background-color: --secondary-brand-color;
+        --secondary-color: --secondary-brand-color;
+    */
+    --main-bg-color-rgb: 31, 23, 1;
+    /* https://github.com/sass/node-sass/issues/2251#issuecomment-365861645 */
+    --main-bg-color: RGB(var(--main-bg-color-rgb));
+    --inverse-txt-color: #dad8d0;
+    --base-fnt-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Ubuntu', serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--base-fnt-size);
+    height: 100vh;
+    margin: 0;
+}
+
+pd-root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}

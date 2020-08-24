@@ -1,0 +1,77 @@
+:host {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-gap: 2em;
+    grid-auto-flow: dense;
+    justify-items: center;
+    padding: 1em;
+}
+
+.title {
+    display: flex;
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title:after {
+    content: "";
+    background-color: #38362f;
+    display: inline-block;
+    height: 5px;
+    opacity: .01;
+    transition: all 0.2s ease-in-out;
+    transition-duration: 0.75s;
+    width: 5%;
+  }
+  
+  .card:hover>.title:after {
+    opacity: 1;
+    width: 100%;
+  }
+
+.version {
+    align-items: center;
+    display: flex;
+    font-size: .75em;
+    justify-content: center;
+
+    font-style: italic;
+    transition: all .15s ease-in-out;
+}
+
+.version a {
+    color: #000;
+}
+
+.version a:hover {
+    color: #38362f;
+}
+
+.version button {
+    margin: .25em 0.5em;
+    padding: 0 0.66em;
+    font-size: 1em;
+    font-weight: 900;
+}
+
+.versions-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.author {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    font-size: .75rem;
+}

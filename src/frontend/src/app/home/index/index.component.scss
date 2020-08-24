@@ -1,0 +1,17 @@
+section {
+    padding: 2em;
+    background-color: var(--inverse-txt-color);
+    color: var(--main-bg-color);
+    border-radius: 5px;
+    font-weight: 600;
+    border: 2px dotted var(--main-bg-color);
+
+    p {
+        font-size: 1.25em;
+        margin: 0;
+
+        em {
+            font-style: normal;
+        }
+    }
+}
