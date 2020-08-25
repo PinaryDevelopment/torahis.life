@@ -19,6 +19,8 @@ export class ApiStub implements HttpInterceptor {
   private handleRoute(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const { method, url } = req;
 
+    console.log('handleRoute: ', url);
+
     switch (true) {
       case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}`):
         const queryParams = new URL(url).searchParams;

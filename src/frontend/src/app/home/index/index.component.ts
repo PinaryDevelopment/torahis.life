@@ -1,17 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 
-import { AudioMediaService } from '../../audio-media/audio-media.service';
+import { AUDIO_MEDIA_COLLECTION_PROVIDER, AUDIO_MEDIA_COLLECTION_TOKEN } from 'src/app/audio-media/audio-media.providers';
+import { Observable } from 'rxjs';
+import { AudioMedia } from 'src/app/core/audio-media';
 
 @Component({
   selector: 'pd-index',
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [AUDIO_MEDIA_COLLECTION_PROVIDER]
 })
 export class IndexComponent {
-  media$ = this.audioMediaService.search();
-
   constructor(
-    private audioMediaService: AudioMediaService
+    @Inject(AUDIO_MEDIA_COLLECTION_TOKEN) readonly media$: Observable<AudioMedia[]>
   ) {}
 }
