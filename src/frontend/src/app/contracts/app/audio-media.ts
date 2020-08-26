@@ -12,4 +12,6 @@ export interface AudioMedia {
     name: string
   };
   date: Date;
+  nextId?: number;
+  previousId?: number;
 }

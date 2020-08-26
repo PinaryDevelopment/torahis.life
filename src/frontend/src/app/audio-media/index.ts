@@ -1,1 +1,1 @@
-export { AudioMediaGrid } from './grid/grid.component';
+export { AudioMediaGridComponent } from './grid/grid.component';

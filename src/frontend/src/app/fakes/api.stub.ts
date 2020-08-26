@@ -20,15 +20,19 @@ export class ApiStub implements HttpInterceptor {
     const { method, url } = req;
 
     console.log('handleRoute: ', url);
+    const queryParams = new URL(url).searchParams;
 
     switch (true) {
       case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}`):
-        const queryParams = new URL(url).searchParams;
         const pageIndex = parseInt(queryParams.get('pageIndex') || '0', 10);
         const maxPageSize = parseInt(queryParams.get('maxPageSize') || '25', 10);
         const collectionFragment = data.AUDIO_MEDIA_COLLECTION
                                        .slice(pageIndex * maxPageSize, (pageIndex * maxPageSize) + maxPageSize);
         return this.ok(collectionFragment);
+      case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?id={{placeholder}}`):
+        const media = data.AUDIO_MEDIA_COLLECTION
+                          .find(a => a.id.toString() === queryParams.get('id'));
+        return this.ok(media);
       case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/tags`):
         return this.ok(data.TAG_COLLECTION);
       default:
@@ -43,11 +47,18 @@ export class ApiStub implements HttpInterceptor {
   private isMatch(url: string, expression: string): boolean {
     const actualUrl = new URL(url);
     const expectedUrl = new URL(expression);
+    const actualQueryParams = actualUrl.searchParams;
+    const expectedQueryParams = expectedUrl.searchParams;
 
+    let queryParamKeysMatch = true;
+    expectedQueryParams.forEach(
+      (expectedValue, expectedKey) => queryParamKeysMatch = queryParamKeysMatch && actualQueryParams.has(expectedKey)
+    );
     return actualUrl.host === expectedUrl.host
       && actualUrl.port === expectedUrl.port
-      && actualUrl.pathname == expectedUrl.pathname;
+      && actualUrl.pathname === expectedUrl.pathname
+      && queryParamKeysMatch;
   }
 }
 
-export const apiStubProvider = { provide: HTTP_INTERCEPTORS, useClass: ApiStub, multi: true }
+export const apiStubProvider = { provide: HTTP_INTERCEPTORS, useClass: ApiStub, multi: true };

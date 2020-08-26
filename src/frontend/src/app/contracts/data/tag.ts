@@ -1,4 +1,4 @@
-import { TagTypeDto } from "./tag-type.enum";
+import { TagTypeDto } from './tag-type.enum';
 
 export interface TagDto {
   id: number;

@@ -1,2 +1,2 @@
-// export * from './app';
+export * as Contracts from './app';
 export * as Dtos from './data';

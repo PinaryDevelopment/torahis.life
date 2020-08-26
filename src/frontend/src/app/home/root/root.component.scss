@@ -3,6 +3,7 @@ header {
     color: var(--inverse-txt-color);
     padding: .75em 1em;
     border-bottom: 5px dotted #efefef;
+    display: flex;
 
     a {
         display: flex;
@@ -18,6 +19,34 @@ header {
         h1 {
           margin: 0;
         }
+    }
+
+    .search {
+      margin-left: auto;
+      display: flex;
+      border-radius: 5px;
+      border: 0;
+      background-color: #fff;
+      transition: all .75s ease-in-out;
+
+      &:focus-within {
+        outline: 1px solid white;
+        outline-offset: 2px;
+        -moz-outline-radius: 5px;
+        flex-grow: .5;
+      }
+
+      input {
+        border: 0;
+        margin-right: 5px;
+        outline: 0;
+        font-size: 1.25em;
+      }
+
+      fa-icon {
+        align-self: center;
+        padding: 0 .5em;
+      }
     }
 }
 
@@ -51,7 +80,7 @@ footer {
 
     &::before {
       border-bottom: 5px dotted #efefef;
-      content: ' ';
+      content: '';
       display: flex;
       margin-top: -2px;
     }

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/cor
 
 import { AUDIO_MEDIA_COLLECTION_PROVIDER, AUDIO_MEDIA_COLLECTION_TOKEN } from 'src/app/audio-media/audio-media.providers';
 import { Observable } from 'rxjs';
-import { AudioMedia } from 'src/app/core/audio-media';
+import { Contracts } from '../../contracts';
 
 @Component({
   selector: 'pd-index',
@@ -13,6 +13,6 @@ import { AudioMedia } from 'src/app/core/audio-media';
 })
 export class IndexComponent {
   constructor(
-    @Inject(AUDIO_MEDIA_COLLECTION_TOKEN) readonly media$: Observable<AudioMedia[]>
+    @Inject(AUDIO_MEDIA_COLLECTION_TOKEN) readonly media$: Observable<Contracts.AudioMedia[]>
   ) {}
 }

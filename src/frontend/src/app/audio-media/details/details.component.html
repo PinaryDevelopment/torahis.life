@@ -1,0 +1,13 @@
+<div class="container" *ngIf="media$ | async as media">
+    <h3 class="title">{{media.series}} - {{media.title}}</h3>
+    <h4 class="series">{{media.versions[0].version}}</h4>
+    <div class="author">{{media.author.name}}</div>
+    <div class="date">{{media.date.toDateString()}}</div>
+
+    <!-- <audio-player if.bind="media.id" url="https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}"></audio-player> -->
+
+    <div class="pager">
+        <button *ngIf="media.previousId" [routerLink]="['../', media.previousId]"><i class="icon">&#8592;</i>Previous</button>
+        <button *ngIf="media.nextId" [routerLink]="['../', media.nextId]"><i>&#8594;</i>Next</button>
+    </div>
+</div>

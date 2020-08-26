@@ -8,7 +8,7 @@ import {
   RootComponent
 } from './home';
 
-import { AudioMediaGrid } from './audio-media';
+import { AudioMediaGridComponent } from './audio-media';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -19,7 +19,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   declarations: [
     RootComponent,
     IndexComponent,
-    AudioMediaGrid
+    AudioMediaGridComponent
   ],
   imports: [
     BrowserModule,

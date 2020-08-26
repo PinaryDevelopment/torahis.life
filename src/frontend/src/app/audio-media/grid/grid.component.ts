@@ -1,5 +1,5 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { AudioMedia } from 'src/app/core/audio-media';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Contracts } from '../../contracts';
 
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,10 +9,10 @@ import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
     styleUrls: ['./grid.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioMediaGrid {
-    @Input() collection: AudioMedia[] | null = [];
+export class AudioMediaGridComponent {
+    @Input() collection: Contracts.AudioMedia[] | null = [];
 
     faArrowAltCircleDown = faArrowAltCircleDown;
 
-    download(shiur: string) {}
+    download(shiur: string): void {}
 }
