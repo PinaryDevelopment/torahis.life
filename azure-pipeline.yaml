@@ -19,18 +19,18 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'src/frontend'
-    customCommand: 'lint'
+    customCommand: 'run lint'
 
 - task: Npm@1
   name: 'NpmBuild'
   inputs:
     command: 'custom'
     workingDir: 'src/frontend'
-    customCommand: 'build'
+    customCommand: 'run build'
 
 - task: Npm@1
   name: 'NpmTest'
   inputs:
     command: 'custom'
     workingDir: 'src/frontend'
-    customCommand: 'test -- --watch=false'
+    customCommand: 'run test -- --watch=false'
