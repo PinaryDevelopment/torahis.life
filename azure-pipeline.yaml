@@ -1,0 +1,36 @@
+# https://aka.ms/yaml
+
+trigger:
+- v2
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: Npm@1
+  name: 'NpmInstall'
+  inputs:
+    command: 'install'
+    workingDir: 'src/frontend'
+
+- task: Npm@1
+  name: 'NpmLint'
+  inputs:
+    command: 'custom'
+    workingDir: 'src/frontend'
+    customCommand: 'lint'
+
+- task: Npm@1
+  name: 'NpmBuild'
+  inputs:
+    command: 'custom'
+    workingDir: 'src/frontend'
+    customCommand: 'build'
+
+- task: Npm@1
+  name: 'NpmTest'
+  inputs:
+    command: 'custom'
+    workingDir: 'src/frontend'
+    customCommand: 'test -- --watch=false'
