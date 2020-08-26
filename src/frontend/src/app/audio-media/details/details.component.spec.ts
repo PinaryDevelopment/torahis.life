@@ -18,7 +18,7 @@ describe('AudioMediaDetailsComponent', () => {
       {
         set: {
           providers: [
-            { provide: AUDIO_MEDIA_TOKEN, useValue: of({versions:[{version:''}],author:{},date:new Date(Date.now())}) }
+            { provide: AUDIO_MEDIA_TOKEN, useValue: of({versions: [{version: ''}], author: {}, date: new Date(Date.now())}) }
           ]
         }
       }
