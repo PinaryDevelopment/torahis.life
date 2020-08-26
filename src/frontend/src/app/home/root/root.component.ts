@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'pd-root',
@@ -9,5 +10,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 export class RootComponent {
   private currentYear = new Date(Date.now()).getFullYear();
 
+  faHome = faHome;
   copyrightYearString = this.currentYear === 2020 ? '2020' : `2020 - ${this.currentYear}`;
 }

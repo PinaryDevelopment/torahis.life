@@ -5,12 +5,19 @@ header {
     border-bottom: 5px dotted #efefef;
 
     a {
+        display: flex;
+        align-items: center;
         text-decoration-color: var(--inverse-txt-color);
-    }
-
-    h1 {
         color: var(--inverse-txt-color);
-        margin: 0;
+
+        fa-icon {
+          margin-top: 4px;
+          padding: .125em .5em .125em 0;
+        }
+
+        h1 {
+          margin: 0;
+        }
     }
 }
 
@@ -20,8 +27,8 @@ main {
     flex-direction: column;
     flex-grow: 1;
     padding: 1em;
-    overflow: auto;
     margin-top: -2.5px;
+    overflow: auto;
 
     .container {
         flex-grow: 1;
@@ -31,6 +38,7 @@ main {
         border-radius: 5px;
         display: flex;
         flex-direction: column;
+        overflow: auto;
     }
 }
 
@@ -38,6 +46,17 @@ footer {
     background-color: var(--main-bg-color);
     color: var(--inverse-txt-color);
     font-size: .75em;
-    padding: .75em 1em;
+    padding-bottom: 1em;
     text-align: center;
+
+    &::before {
+      border-bottom: 5px dotted #efefef;
+      content: ' ';
+      display: flex;
+      margin-top: -2px;
+    }
+
+    div {
+      margin-top: .75em;
+    }
 }

@@ -3,7 +3,7 @@
     <div class="versions-container">
         <div class="version" *ngFor="let version of media.versions">
             <a [routerLink]="['/audio', media.id]">{{version.version}} ({{version.duration}})</a>
-            <button type="button" title="Download the shiur" (click)="download(version.shiur)">&#8891;</button>
+            <button type="button" title="Download the shiur" (click)="download(version.shiur)"><fa-icon [icon]="faArrowAltCircleDown"></fa-icon></button>
         </div>
     </div>
     <div class="author">{{media.author.name}}</div>

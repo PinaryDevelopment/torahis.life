@@ -28,8 +28,8 @@
     transition-duration: 0.75s;
     width: 5%;
   }
-  
-  .card:hover>.title:after {
+
+  pd-card:hover > .title:after {
     opacity: 1;
     width: 100%;
   }
@@ -64,14 +64,16 @@
     flex-direction: column;
     align-content: center;
     justify-content: center;
+    margin: .25em;
 }
 
 .author {
-    flex-grow: 1;
     display: flex;
     align-items: center;
+    margin: .25em;
 }
 
 .date {
     font-size: .75rem;
+    margin: .25em;
 }
