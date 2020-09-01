@@ -15,17 +15,17 @@ steps:
     CHROMEWEBDRIVER:
 
 - task: Npm@1
+  name: 'NpmInstall'
+  inputs:
+    command: 'install'
+    workingDir: 'src/frontend'
+
+- task: Npm@1
   name: 'NpmLint'
   inputs:
     command: 'custom'
     workingDir: 'src/frontend'
     customCommand: 'run lint'
-
-- task: Npm@1
-  name: 'NpmInstall'
-  inputs:
-    command: 'install'
-    workingDir: 'src/frontend'
 
 - task: Npm@1
   name: 'NpmBuild'
