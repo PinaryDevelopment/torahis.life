@@ -33,35 +33,36 @@ export class AudioMediaPlayerComponent {
   totalLength = '00:00';
   volume = 50;
 
-  private _currentTime: number = 0;
-  private _duration: number = 0;
+  private privateCurrentTime = 0;
+  private privateDuration = 0;
+  private previousVolume = 0;
 
-  updateDuration(d: Event) {
+  updateDuration(d: Event): void {
     const duration = (d.target as HTMLAudioElement).duration;
     this.totalLength = this.createTimeSpan(duration);
     this.isLoading = false;
-    this._duration = duration;
+    this.privateDuration = duration;
   }
 
-  updateTime(t: Event) {
+  updateTime(t: Event): void {
     this.currentTime = (t.target as HTMLAudioElement).currentTime;
   }
 
   get currentTime(): number {
-    return this._currentTime;
+    return this.privateCurrentTime;
   }
 
   set currentTime(currentTime: number) {
-    this._currentTime = currentTime;
-    this.percentComplete = (currentTime / this._duration) * 100;
+    this.privateCurrentTime = currentTime;
+    this.percentComplete = (currentTime / this.privateDuration) * 100;
     this.currentLocation = this.createTimeSpan(currentTime);
   }
 
-  slideTimeUpdate(t: Event) {
-      this.currentTime = this._duration * (+(t.target as HTMLInputElement).value / 100);
+  slideTimeUpdate(t: Event): void {
+      this.currentTime = this.privateDuration * (+(t.target as HTMLInputElement).value / 100);
   }
 
-  togglePlay() {
+  togglePlay(): void {
     if (this.audioElementRef) {
       if (this.paused) {
         this.audioElementRef.nativeElement.play();
@@ -73,31 +74,31 @@ export class AudioMediaPlayerComponent {
     }
   }
 
-  goToBeginning() {
+  goToBeginning(): void {
       this.currentTime = 0;
   }
 
-  fastForward() {
+  fastForward(): void {
       this.currentTime = this.currentTime + this.fastForwardAmount;
   }
 
-  rewind() {
+  rewind(): void {
       this.currentTime = this.currentTime - this.rewindAmount;
   }
 
-  goToEnd() {
-      this.currentTime = this._duration;
+  goToEnd(): void {
+      this.currentTime = this.privateDuration;
   }
 
-  updateVolume(v: Event) {
+  updateVolume(v: Event): void {
       this.volume = +(v.target as HTMLInputElement).value;
   }
 
-  startedPlaying() {
+  startedPlaying(): void {
     this.paused = false;
   }
 
-  onEnded() {
+  onEnded(): void {
     this.paused = true;
   }
 
@@ -109,8 +110,7 @@ export class AudioMediaPlayerComponent {
   //   //     }
   //   // }
 
-  private previousVolume: number = 0;
-  toggleVolume() {
+  toggleVolume(): void {
       if (this.volume !== 0) {
           this.previousVolume = this.volume;
           this.volume = 0;
@@ -120,20 +120,20 @@ export class AudioMediaPlayerComponent {
       }
   }
 
-  private createTimeSpan(timeInSeconds: number) {
+  private createTimeSpan(timeInSeconds: number): string {
       let minutes = Math.floor(timeInSeconds / 60);
-      let seconds = Math.floor((timeInSeconds % 60));
+      const seconds = Math.floor((timeInSeconds % 60));
 
       if (minutes >= 60) {
-          let hours = Math.floor(minutes / 60);
+          const hours = Math.floor(minutes / 60);
           minutes = Math.floor(minutes % 60);
-          return `${this.toFixedTimeString(hours)}:${this.toFixedTimeString(minutes)}:${this.toFixedTimeString(seconds)}`
+          return `${this.toFixedTimeString(hours)}:${this.toFixedTimeString(minutes)}:${this.toFixedTimeString(seconds)}`;
       }
 
       return `${this.toFixedTimeString(minutes)}:${this.toFixedTimeString(seconds)}`;
   }
 
-  private toFixedTimeString(timeUnit: number) {
+  private toFixedTimeString(timeUnit: number): string {
       const timeUnitString = timeUnit.toFixed(0);
       return timeUnitString.length === 1 ? `0${timeUnitString}` : timeUnitString;
   }
