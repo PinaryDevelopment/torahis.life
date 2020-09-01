@@ -1,0 +1,59 @@
+<audio
+  #audio
+  autoplay
+  (durationchange)="updateDuration($event)"
+  (timeupdate)="updateTime($event)"
+  (ended)="onEnded()"
+  (play)="startedPlaying()"
+  (playing)="startedPlaying()"
+  [volume]="volume / 100"
+  [currentTime]="currentTime"
+>
+  <source [src]="url" type="audio/mpeg" />
+</audio>
+
+
+<input class="current-time slider" title="location" type="range" min="0" max="100" value="0" step=".001" [value]="percentComplete" (input)="slideTimeUpdate($event)" />
+<div class="duration">{{currentLocation}} - {{totalLength}}</div>
+
+<div class="controls">
+  <button type="button" (click)="goToBeginning()" title="go to beginning">
+      <fa-icon [icon]="faStepBackward"></fa-icon>
+      <span>Start</span>
+  </button>
+  <button type="button" (click)="rewind()" title="seek backward">
+      <fa-icon [icon]="faBackward"></fa-icon>
+      <span>Rewind</span>
+  </button>
+
+  <button type="button" class="play" (click)="togglePlay()" title="play">
+      <fa-icon [icon]="faPlay" *ngIf="paused"></fa-icon>
+      <fa-icon [icon]="faPause" *ngIf="!paused"></fa-icon>
+      <span>{{paused ? 'Play' : 'Pause'}}</span>
+  </button>
+
+  <button type="button" (click)="fastForward()" title="seek forward">
+    <fa-icon [icon]="faForward"></fa-icon>
+      <span>Advance</span>
+  </button>
+  <button type="button" (click)="goToEnd()" title="go to end">
+      <fa-icon [icon]="faStepForward"></fa-icon>
+      <span>End</span>
+  </button>
+
+  <div class="volume">
+      <fa-icon *ngIf="volume >= 50" [icon]="faVolumeUp" (click)="toggleVolume()"></fa-icon>
+      <fa-icon *ngIf="volume < 50 && volume > 0" [icon]="faVolumeDown" (click)="toggleVolume()"></fa-icon>
+      <fa-icon *ngIf="volume === 0" [icon]="faVolumeMute" (click)="toggleVolume()"></fa-icon>
+      <input title="volume" type="range" min="0" max="100" [value]="volume" class="slider" (input)="updateVolume($event)" />
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loading-container">
+  <div class="sk-folding-cube">
+      <div class="sk-cube1 sk-cube"></div>
+      <div class="sk-cube2 sk-cube"></div>
+      <div class="sk-cube4 sk-cube"></div>
+      <div class="sk-cube3 sk-cube"></div>
+  </div>
+</div>

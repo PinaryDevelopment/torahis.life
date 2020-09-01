@@ -4,7 +4,7 @@
     <div class="author">{{media.author.name}}</div>
     <div class="date">{{media.date.toDateString()}}</div>
 
-    <!-- <audio-player if.bind="media.id" url="https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${shiur.id}"></audio-player> -->
+    <pd-audio-media-player></pd-audio-media-player>
 
     <div class="pager">
         <button *ngIf="media.previousId" [routerLink]="['../', media.previousId]"><i class="icon">&#8592;</i>Previous</button>

@@ -13,7 +13,6 @@ import { AudioMediaGridComponent } from './audio-media';
 import { SharedModule } from './shared/shared.module';
 
 import { apiStubProvider } from './fakes/api.stub';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -25,8 +24,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    HttpClientModule,
-    FontAwesomeModule
+    HttpClientModule
   ],
   providers: [
     apiStubProvider

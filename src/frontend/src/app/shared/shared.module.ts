@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CardComponent } from './card/card.component';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [
         CardComponent
     ],
     imports: [
-        CommonModule
+        CommonModule,
+        FontAwesomeModule
     ],
     exports: [
-      CardComponent
+      CardComponent,
+      FontAwesomeModule
     ]
 })
 export class SharedModule {}
