@@ -6,15 +6,14 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+steps:
 - task: Bash@3
   inputs:
     targetType: 'inline'
-    script: |
-      ./env.sh
-      sudo ./svc.sh stop
-      sudo ./svc.sh start
+    script: echo 'Adding env variables...'
+  env:
+    CHROMEWEBDRIVER:
 
-steps:
 - task: Npm@1
   name: 'NpmLint'
   inputs:
