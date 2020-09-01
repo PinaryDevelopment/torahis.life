@@ -12,7 +12,7 @@ steps:
     targetType: 'inline'
     script: echo 'Adding env variables...'
   env:
-    CHROMEWEBDRIVER:
+    CHROMEWEBDRIVER: $(CHROMEWEBDRIVER)
 
 - task: Npm@1
   name: 'NpmInstall'
