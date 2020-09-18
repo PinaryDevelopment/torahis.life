@@ -3,9 +3,24 @@
       <fa-icon [icon]="faHome" [size]="'lg'"></fa-icon>
       <h1>TorahIs.Life</h1>
     </a>
-    <div class="search">
-      <fa-icon [icon]="faSearch"></fa-icon>
-      <input type="text" />
+    <div class="search-container">
+      <div class="search">
+        <fa-icon [icon]="faSearch"></fa-icon>
+        <input #input type="text" (keyup)="onKeyup($event)" (focus)="onFocus()" (blur)="onBlur()" />
+      </div>
+      <ng-container *ngIf="showTypeahead">
+        <ng-container *ngIf="searchResults$ | async as results">
+          <ol class="typeahead" *ngIf="results.length">
+            <li *ngFor="let result of results">
+              <h3 class="title">{{result.series}} - {{result.title}}</h3>
+              <div class="author">{{result.author.name}}</div>
+            </li>
+          </ol>
+          <div class="typeahead" *ngIf="searchTerm && !results.length">
+            No results matched "{{searchTerm}}"".
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
 </header>
 

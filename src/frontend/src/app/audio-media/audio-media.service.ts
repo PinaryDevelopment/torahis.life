@@ -6,7 +6,7 @@ import { Observable, combineLatest } from 'rxjs';
 
 import { Dtos, Contracts } from '../contracts';
 import { map } from 'rxjs/operators';
-import { TagTypeDto, AudioMediaDto, TagDto } from '../contracts/data';
+import { TagTypeDto, AudioMediaDto, TagDto, SearchOptions } from '../contracts/data';
 
 @Injectable({
     providedIn: 'root'
@@ -16,14 +16,8 @@ export class AudioMediaService {
         private http: HttpClient
     ) {}
 
-    search({
-      pageIndex = 0,
-      maxPageSize = 25
-    }: {
-      pageIndex?: number,
-      maxPageSize?: number
-    } = {}): Observable<Contracts.AudioMedia[]> {
-      const url = `${env.baseApisUri}/audio-media?pageIndex=${pageIndex}&maxPageSize=${maxPageSize}`;
+    search(options: SearchOptions): Observable<Contracts.AudioMedia[]> {
+      const url = `${env.baseApisUri}/audio-media?pageIndex=${options.pageIndex}&maxPageSize=${options.maxPageSize}&searchTerm=${options.searchTerm}`;
       const apiShiurim = this.http.get<Dtos.AudioMediaDto[]>(url);
 
       return combineLatest([apiShiurim, this.getTags()])

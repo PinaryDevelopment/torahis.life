@@ -23,10 +23,13 @@ export class ApiStub implements HttpInterceptor {
     const queryParams = new URL(url).searchParams;
 
     switch (true) {
-      case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}`):
+      case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}&searchTerm={{placeholder}}`):
         const pageIndex = parseInt(queryParams.get('pageIndex') || '0', 10);
         const maxPageSize = parseInt(queryParams.get('maxPageSize') || '25', 10);
+        let searchTerm = queryParams.get('searchTerm');
+        searchTerm = searchTerm ? searchTerm.toLocaleLowerCase() : null;
         const collectionFragment = data.AUDIO_MEDIA_COLLECTION
+                                       .filter(media => !searchTerm || media.authorName?.toLocaleLowerCase().includes(searchTerm) || media.title.toLocaleLowerCase().includes(searchTerm))
                                        .slice(pageIndex * maxPageSize, (pageIndex * maxPageSize) + maxPageSize);
         return this.ok(collectionFragment);
       case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?id={{placeholder}}`):

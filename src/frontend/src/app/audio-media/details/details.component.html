@@ -7,7 +7,7 @@
     <pd-audio-media-player></pd-audio-media-player>
 
     <div class="pager">
-        <button *ngIf="media.previousId" [routerLink]="['../', media.previousId]"><i class="icon">&#8592;</i>Previous</button>
-        <button *ngIf="media.nextId" [routerLink]="['../', media.nextId]"><i>&#8594;</i>Next</button>
+        <button *ngIf="media.previousId" [routerLink]="['../', media.previousId]"><fa-icon [icon]="faLongArrowAltLeft"></fa-icon>Previous</button>
+        <button *ngIf="media.nextId" [routerLink]="['../', media.nextId]"><fa-icon [icon]="faLongArrowAltRight"></fa-icon>Next</button>
     </div>
 </div>

@@ -18,6 +18,10 @@
   display: flex;
   justify-content: space-between;
   margin-top: auto;
+
+  button {
+    flex-basis: 100px;
+  }
 }
 
 audio-player {

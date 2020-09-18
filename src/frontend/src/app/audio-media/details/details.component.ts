@@ -2,6 +2,7 @@ import { Component, Input, ChangeDetectionStrategy, Inject } from '@angular/core
 import { Contracts } from '../../contracts';
 import { AUDIO_MEDIA_PROVIDER, AUDIO_MEDIA_TOKEN} from '../audio-media.providers';
 import { Observable } from 'rxjs';
+import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'pd-audio-media-details',
@@ -11,6 +12,9 @@ import { Observable } from 'rxjs';
     providers: [AUDIO_MEDIA_PROVIDER]
 })
 export class AudioMediaDetailsComponent {
+  faLongArrowAltRight = faLongArrowAltRight;
+  faLongArrowAltLeft = faLongArrowAltLeft;
+
   constructor(
     @Inject(AUDIO_MEDIA_TOKEN) readonly media$: Observable<Contracts.AudioMedia>
   ) {}
