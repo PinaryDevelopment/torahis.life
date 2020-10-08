@@ -48,6 +48,7 @@ header {
         color: var(--main-bg-color);
         box-shadow: 0.75em 0.75em 0.5em -0.5em RGBA(94, 94, 94, 0.9);
         padding: 0;
+        z-index: 1;
 
         li {
           padding: .5em 1em;

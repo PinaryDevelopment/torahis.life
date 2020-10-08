@@ -19,7 +19,13 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@audio-media/*": ["src/app/audio-media/*"],
+      "@contracts/*": ["src/app/contracts/*"],
+      "@home/*": ["src/app/home/*"],
+      "@testing/*": ["src/testing/*"]
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

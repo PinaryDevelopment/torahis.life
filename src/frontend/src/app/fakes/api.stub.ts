@@ -26,7 +26,7 @@ export class ApiStub implements HttpInterceptor {
       case method === 'GET' && this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}&searchTerm={{placeholder}}`):
         const pageIndex = parseInt(queryParams.get('pageIndex') || '0', 10);
         const maxPageSize = parseInt(queryParams.get('maxPageSize') || '25', 10);
-        let searchTerm = queryParams.get('searchTerm');
+        let searchTerm: string | null | undefined = queryParams.get('searchTerm');
         searchTerm = searchTerm ? searchTerm.toLocaleLowerCase() : null;
         const collectionFragment = data.AUDIO_MEDIA_COLLECTION
                                        .filter(media => !searchTerm || media.authorName?.toLocaleLowerCase().includes(searchTerm) || media.title.toLocaleLowerCase().includes(searchTerm))

@@ -7,15 +7,16 @@
   (play)="startedPlaying()"
   (playing)="startedPlaying()"
   [volume]="volume / 100"
-  [currentTime]="currentTime">
+  [currentTime]="audioElementCurrentTimeSetter"
+>
   <source [src]="url" type="audio/mpeg" />
 </audio>
-
 
 <input class="current-time slider" title="location" type="range" min="0" max="100" value="0" step=".001" [value]="percentComplete" (input)="slideTimeUpdate($event)" />
 <div class="duration">{{currentLocation}} - {{totalLength}}</div>
 
 <div class="controls">
+  <!-- TODO: add disabled attribute if at beginning, same for end -->
   <button type="button" (click)="goToBeginning()" title="go to beginning">
       <fa-icon [icon]="faStepBackward"></fa-icon>
       <span>Start</span>
@@ -41,9 +42,10 @@
   </button>
 
   <div class="volume">
-      <fa-icon *ngIf="volume >= 50" [icon]="faVolumeUp" (click)="toggleVolume()"></fa-icon>
-      <fa-icon *ngIf="volume < 50 && volume > 0" [icon]="faVolumeDown" (click)="toggleVolume()"></fa-icon>
-      <fa-icon *ngIf="volume === 0" [icon]="faVolumeMute" (click)="toggleVolume()"></fa-icon>
+      <fa-icon
+        [icon]="volume === 0 ? faVolumeMute : volume < 50 ? faVolumeDown : faVolumeUp"
+        (click)="toggleVolume()"
+      ></fa-icon>
       <input title="volume" type="range" min="0" max="100" [value]="volume" class="slider" (input)="updateVolume($event)" />
   </div>
 </div>

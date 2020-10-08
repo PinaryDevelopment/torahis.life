@@ -22,8 +22,7 @@ function audioMediaSearchFactory(
   { queryParams }: ActivatedRoute,
   audioMediaService: AudioMediaService
 ): Observable<Contracts.AudioMedia[]> {
-  const defaultQueryParams = { pageIndex: 0, maxPageSize: 25, searchInput: '' };
-
+  const defaultQueryParams = { pageIndex: 0, maxPageSize: 25, searchTerm: '' };
   return queryParams.pipe(
     switchMap(params => {
       params = { ...params, ...defaultQueryParams };

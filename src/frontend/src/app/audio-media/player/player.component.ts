@@ -1,5 +1,6 @@
-  /* https://ilikekillnerds.com/category/aurelia-2/
-   https://stackoverflow.com/questions/12325787/setting-the-granularity-of-the-html5-audio-event-timeupdate#comment-69606299
+/*
+    https://ilikekillnerds.com/category/aurelia-2/
+    https://stackoverflow.com/questions/12325787/setting-the-granularity-of-the-html5-audio-event-timeupdate#comment-69606299
 */
 import { Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild } from '@angular/core';
 import { faPlay, faStepBackward, faBackward, faForward, faStepForward, faPause, faVolumeDown, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
@@ -33,33 +34,32 @@ export class AudioMediaPlayerComponent {
   totalLength = '00:00';
   volume = 50;
 
-  private privateCurrentTime = 0;
-  private privateDuration = 0;
-  private previousVolume = 0;
+  private _currentTime = 0;
+  private _duration = 0;
+  private _previousVolume = 0;
 
   updateDuration(d: Event): void {
     const duration = (d.target as HTMLAudioElement).duration;
     this.totalLength = this.createTimeSpan(duration);
     this.isLoading = false;
-    this.privateDuration = duration;
+    this._duration = duration;
   }
 
   updateTime(t: Event): void {
-    this.currentTime = (t.target as HTMLAudioElement).currentTime;
+    this._currentTime = (t.target as HTMLAudioElement).currentTime;
+    this.updateTimeIndicators();
   }
 
-  get currentTime(): number {
-    return this.privateCurrentTime;
-  }
+  audioElementCurrentTimeSetter: number = 0;
 
   set currentTime(currentTime: number) {
-    this.privateCurrentTime = currentTime;
-    this.percentComplete = (currentTime / this.privateDuration) * 100;
-    this.currentLocation = this.createTimeSpan(currentTime);
+    this._currentTime = currentTime;
+    this.updateTimeIndicators();
   }
 
   slideTimeUpdate(t: Event): void {
-      this.currentTime = this.privateDuration * (+(t.target as HTMLInputElement).value / 100);
+      this.currentTime = this._duration * (+(t.target as HTMLInputElement).value / 100);
+      this.audioElementCurrentTimeSetter = this._currentTime;
   }
 
   togglePlay(): void {
@@ -76,18 +76,22 @@ export class AudioMediaPlayerComponent {
 
   goToBeginning(): void {
       this.currentTime = 0;
+      this.audioElementCurrentTimeSetter = this._currentTime;
   }
 
   fastForward(): void {
-      this.currentTime = this.currentTime + this.fastForwardAmount;
+      this.currentTime = this._currentTime + this.fastForwardAmount;
+      this.audioElementCurrentTimeSetter = this._currentTime;
   }
 
   rewind(): void {
-      this.currentTime = this.currentTime - this.rewindAmount;
+      this.currentTime = this._currentTime - this.rewindAmount;
+      this.audioElementCurrentTimeSetter = this._currentTime;
   }
 
   goToEnd(): void {
-      this.currentTime = this.privateDuration;
+      this.currentTime = this._duration;
+      this.audioElementCurrentTimeSetter = this._currentTime;
   }
 
   updateVolume(v: Event): void {
@@ -102,22 +106,27 @@ export class AudioMediaPlayerComponent {
     this.paused = true;
   }
 
-  //   // public percentLoaded() {
-  //   //     for (let i = 0; i < this.audioElement.buffered.length; i++) {
-  //   //         if (this.audioElement.buffered.start(this.audioElement.buffered.length - 1 - i) < this.audioElement.currentTime) {
-  //   //             break;
-  //   //         }
-  //   //     }
-  //   // }
+  // public percentLoaded() {
+  //     for (let i = 0; i < this.audioElement.buffered.length; i++) {
+  //         if (this.audioElement.buffered.start(this.audioElement.buffered.length - 1 - i) < this.audioElement.currentTime) {
+  //             break;
+  //         }
+  //     }
+  // }
 
   toggleVolume(): void {
       if (this.volume !== 0) {
-          this.previousVolume = this.volume;
+          this._previousVolume = this.volume;
           this.volume = 0;
       } else{
-          this.volume = this.previousVolume;
-          this.previousVolume = 0;
+          this.volume = this._previousVolume;
+          this._previousVolume = 0;
       }
+  }
+
+  private updateTimeIndicators() {
+    this.percentComplete = (this._currentTime / this._duration) * 100;
+    this.currentLocation = this.createTimeSpan(this._currentTime);
   }
 
   private createTimeSpan(timeInSeconds: number): string {

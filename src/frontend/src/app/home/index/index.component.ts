@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 
-import { AUDIO_MEDIA_COLLECTION_PROVIDER, AUDIO_MEDIA_COLLECTION_TOKEN } from 'src/app/audio-media/audio-media.providers';
 import { Observable } from 'rxjs';
-import { Contracts } from '../../contracts';
+
+import { AUDIO_MEDIA_COLLECTION_PROVIDER, AUDIO_MEDIA_COLLECTION_TOKEN } from '@audio-media/index';
+import { Contracts } from '@contracts/index';
 
 @Component({
   selector: 'pd-index',

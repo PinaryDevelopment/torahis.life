@@ -1,13 +1,16 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppModule } from '../../app.module';
-import { IndexComponent } from './index.component';
-import { AUDIO_MEDIA_COLLECTION_TOKEN } from '../../audio-media/audio-media.providers';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { IndexComponent } from '@home/index';
+import { AudioMediaGridComponent, AUDIO_MEDIA_COLLECTION_TOKEN } from '@audio-media/index';
 
 describe('IndexComponent', () => {
+  let fixture: ComponentFixture<IndexComponent>;
+  let component: IndexComponent;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AppModule
+      declarations: [
+        IndexComponent,
+        AudioMediaGridComponent
       ]
     }).overrideComponent(
       IndexComponent,
@@ -21,9 +24,26 @@ describe('IndexComponent', () => {
     ).compileComponents();
   }));
 
-  it('should create the component', () => {
-    const fixture = TestBed.createComponent(IndexComponent);
-    const component = fixture.componentInstance;
-    expect(component).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(IndexComponent);
+    component = fixture.componentInstance;
+  });
+
+  describe('unit:ts', () => {
+    it('should create the component', () => {
+      expect(component).toBeTruthy();
+    });
+  });
+
+  describe('unit:DOM', () => {
+    let section: HTMLElement;
+
+    beforeEach(() => {
+      section = fixture.nativeElement.querySelector('section');
+    });
+
+    it('should display section text', () => {
+      expect(section.textContent?.trim()).toBe(`Welcome to Torah is Life, your home for quality torah content.`)
+    });
   });
 });
