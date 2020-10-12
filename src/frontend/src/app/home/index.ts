@@ -1,2 +1,2 @@
-export { IndexComponent } from './index/index.component';
-export { RootComponent } from './root/root.component';
+export * from './index/index.component';
+export * from './root/root.component';

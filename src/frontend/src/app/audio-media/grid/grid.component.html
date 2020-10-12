@@ -6,6 +6,6 @@
             <button type="button" title="Download the shiur" (click)="download(version.shiur)"><fa-icon [icon]="faArrowAltCircleDown"></fa-icon></button>
         </div>
     </div>
-    <div class="author">{{media.author.name}}</div>
-    <div class="date">{{media.date.toDateString()}}</div>
+    <div class="author">{{media.author?.name}}</div>
+    <div class="date">{{media.date | date:'E LLL dd yyyy'}}</div>
 </pd-card>

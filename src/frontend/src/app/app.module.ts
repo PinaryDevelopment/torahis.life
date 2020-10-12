@@ -12,7 +12,7 @@ import { AudioMediaGridComponent } from './audio-media';
 
 import { SharedModule } from './shared/shared.module';
 
-import { apiStubProvider } from './fakes/api.stub';
+import { apiStubProvider } from '@testing/fakes/api.stub';
 
 @NgModule({
   declarations: [
