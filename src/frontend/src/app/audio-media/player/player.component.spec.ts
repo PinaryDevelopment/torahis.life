@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AudioMediaPlayerComponent } from '@audio-media/index';
@@ -10,7 +10,7 @@ describe('AudioMediaPlayerComponent', () => {
   let component: AudioMediaPlayerComponent;
   let fixture: ComponentFixture<AudioMediaPlayerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AudioMediaPlayerComponent ],
       imports: [

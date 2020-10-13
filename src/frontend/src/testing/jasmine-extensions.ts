@@ -2,7 +2,7 @@ declare module jasmine {
   function spyOnPrivate<T>(obj: T, nameToSpyOn: string): Spy<any>;
 
   interface Matchers<T> {
-    toBeLeftOf(element: HTMLElement | null, message?: string): boolean;
+    toBeLeftOf(element: HTMLElement, message?: string): boolean;
   }
 }
 
@@ -10,12 +10,12 @@ beforeEach(() => {
   jasmine.addMatchers({
     toBeLeftOf: () => {
       return {
-        compare: (actual: HTMLElement | null, expected: HTMLElement | null, customMessage?: string) => {
+        compare: (actual: HTMLElement, expected: HTMLElement, customMessage?: string) => {
           const leftItemRightBoundary = actual?.getBoundingClientRect().right || 0;
           const rightItemLeftBoundary = expected?.getBoundingClientRect().left || 0;
 
           return {
-            pass: leftItemRightBoundary <= rightItemLeftBoundary,
+            pass: !!actual && !!expected && leftItemRightBoundary <= rightItemLeftBoundary,
             get message() {
               let failureMessage = 'Expected ' + leftItemRightBoundary + ' to be less than ' + rightItemLeftBoundary;
 

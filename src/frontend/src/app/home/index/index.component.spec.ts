@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { IndexComponent } from '@home/index';
 import { AudioMediaGridComponent, AUDIO_MEDIA_COLLECTION_TOKEN } from '@audio-media/index';
 
@@ -6,7 +6,7 @@ describe('IndexComponent', () => {
   let fixture: ComponentFixture<IndexComponent>;
   let component: IndexComponent;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         IndexComponent,

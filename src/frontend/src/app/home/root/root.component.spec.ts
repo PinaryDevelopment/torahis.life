@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, waitForAsync, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing';
@@ -18,7 +18,7 @@ describe('RootComponent', () => {
 
   let audioMediaServiceSpy: jasmine.SpyObj<AudioMediaService>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     audioMediaServiceSpy = jasmine.createSpyObj<AudioMediaService>('AudioMediaService', ['search']);
 
     TestBed.configureTestingModule({
@@ -183,13 +183,21 @@ describe('RootComponent', () => {
     it('should display icon to left of heading', () => {
       const iconElement = header.querySelector<HTMLElement>('fa-icon');
       const headingElement = header.querySelector<HTMLHeadingElement>('h1');
-      expect(iconElement).toBeLeftOf(headingElement);
+      if (!headingElement) {
+        fail();
+      } else {
+        expect(iconElement).toBeLeftOf(headingElement);
+      }
     });
 
     it('should display search icon to left of input', () => {
       const iconElement = searchContainer.querySelector<HTMLElement>('fa-icon');
       const inputElement = searchContainer.querySelector<HTMLInputElement>('input');
-      expect(iconElement).toBeLeftOf(inputElement);
+      if (!inputElement) {
+        fail();
+      } else {
+        expect(iconElement).toBeLeftOf(inputElement);
+      }
     });
 
     it('should invoke onFocus() when search input is focused', () => {
