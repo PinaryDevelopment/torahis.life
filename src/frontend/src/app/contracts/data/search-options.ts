@@ -6,7 +6,7 @@ export class SearchOptions {
   constructor({
     pageIndex = 0,
     maxPageSize = 25,
-    searchTerm = undefined
+    searchTerm
   }: SearchOptions = {}) {
     this.pageIndex = pageIndex;
     this.maxPageSize = maxPageSize;

@@ -173,11 +173,11 @@ describe('RootComponent', () => {
     it('should display footer copyright text', () => {
       setComponentPrivateProperty(component, 'currentYear', 2020);
       fixture.detectChanges();
-      expect(footer.textContent).toBe(`Powered by Pinary Development LLC © 2020`)
+      expect(footer.textContent).toBe(`Powered by Pinary Development LLC © 2020`);
     });
 
     it('should display site name in header', () => {
-      expect(header.textContent).toBe(`TorahIs.Life`)
+      expect(header.textContent).toBe(`TorahIs.Life`);
     });
 
     it('should display icon to left of heading', () => {
@@ -229,8 +229,9 @@ describe('RootComponent', () => {
 
       const keyupSpy = spyOn(component, 'onKeyup').and.callThrough();
       const keyupEvent = new KeyboardEvent('keyup', { key: 'a' });
-      if (inputElement)
+      if (inputElement) {
         inputElement.value = 'a';
+      }
       inputElement?.dispatchEvent(keyupEvent);
       fixture.detectChanges();
 
@@ -300,9 +301,9 @@ describe('RootComponent', () => {
         const items = typeahead?.querySelectorAll('li');
         expect(items?.length).toBe(1);
         const titleElement = items?.item(0).querySelector('.title');
-        expect(titleElement?.textContent?.trim()).toBe(`${apiReturnValue[0].series} - ${apiReturnValue[0].title}`)
+        expect(titleElement?.textContent?.trim()).toBe(`${apiReturnValue[0].series} - ${apiReturnValue[0].title}`);
         const authorElement = items?.item(0).querySelector('.author');
-        expect(authorElement?.textContent?.trim()).toBe(apiReturnValue[0].author.name)
+        expect(authorElement?.textContent?.trim()).toBe(apiReturnValue[0].author.name);
       });
     });
   });

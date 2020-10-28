@@ -1,7 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing';
 
 import { AudioMediaDetailsComponent, AUDIO_MEDIA_TOKEN, AudioMediaPlayerComponent } from '@audio-media/index';
@@ -66,7 +66,7 @@ describe('AudioMediaDetailsComponent', () => {
       .compileComponents();
     }));
 
-    function updateAudioMedia(am: AudioMedia) {
+    function updateAudioMedia(am: AudioMedia): void {
       audioMediaSubject.next(am);
       fixture.detectChanges();
 

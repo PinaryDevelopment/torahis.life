@@ -43,7 +43,7 @@ describe('IndexComponent', () => {
     });
 
     it('should display section text', () => {
-      expect(section.textContent?.trim()).toBe(`Welcome to Torah is Life, your home for quality torah content.`)
+      expect(section.textContent?.trim()).toBe(`Welcome to Torah is Life, your home for quality torah content.`);
     });
   });
 });

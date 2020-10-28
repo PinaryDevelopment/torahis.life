@@ -1,9 +1,9 @@
 import { CommonModule, Location } from '@angular/common';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 
-import { routes } from './audio-media-routing.module'
+import { routes } from './audio-media-routing.module';
 import { RootComponent } from '@home/index';
 import { AudioMediaDetailsComponent } from '@audio-media/index';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing';
@@ -13,7 +13,6 @@ import { NgZone } from '@angular/core';
 describe('Router: Audio Media', () => {
   let location: Location;
   let router: Router;
-  let fixture: ComponentFixture<RootComponent>;
   let zone: NgZone;
 
   beforeEach(() => {
@@ -34,7 +33,6 @@ describe('Router: Audio Media', () => {
     location = TestBed.inject(Location);
     zone = TestBed.inject(NgZone);
 
-    fixture = TestBed.createComponent(RootComponent);
     zone.run(() => router.initialNavigation());
   });
 

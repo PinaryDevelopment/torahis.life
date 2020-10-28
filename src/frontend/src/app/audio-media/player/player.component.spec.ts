@@ -83,7 +83,7 @@ describe('AudioMediaPlayerComponent', () => {
       } else {
         component.paused = true;
         const playSpy = spyOn(component.audioElementRef.nativeElement, 'play');
-        const pauseSpy = spyOn(component.audioElementRef.nativeElement, 'pause')
+        const pauseSpy = spyOn(component.audioElementRef.nativeElement, 'pause');
         component.togglePlay();
         expect(playSpy).toHaveBeenCalledTimes(1);
         expect(pauseSpy).not.toHaveBeenCalled();
@@ -97,7 +97,7 @@ describe('AudioMediaPlayerComponent', () => {
       } else {
         component.paused = false;
         const playSpy = spyOn(component.audioElementRef.nativeElement, 'play');
-        const pauseSpy = spyOn(component.audioElementRef.nativeElement, 'pause')
+        const pauseSpy = spyOn(component.audioElementRef.nativeElement, 'pause');
         component.togglePlay();
         expect(pauseSpy).toHaveBeenCalledTimes(1);
         expect(playSpy).not.toHaveBeenCalled();

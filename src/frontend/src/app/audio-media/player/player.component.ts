@@ -25,6 +25,7 @@ export class AudioMediaPlayerComponent {
   @Input() url = '/assets/Daf 18-with Rashi-2020.08.27.MP3';
   @ViewChild('audio') audioElementRef?: ElementRef<HTMLAudioElement>;
 
+  audioElementCurrentTimeSetter = 0;
   currentLocation = '00:00';
   fastForwardAmount = 15;
   isLoading = true;
@@ -50,7 +51,6 @@ export class AudioMediaPlayerComponent {
     this.updateTimeIndicators();
   }
 
-  audioElementCurrentTimeSetter: number = 0;
 
   set currentTime(currentTime: number) {
     this._currentTime = currentTime;
@@ -124,7 +124,7 @@ export class AudioMediaPlayerComponent {
       }
   }
 
-  private updateTimeIndicators() {
+  private updateTimeIndicators(): void {
     this.percentComplete = (this._currentTime / this._duration) * 100;
     this.currentLocation = this.createTimeSpan(this._currentTime);
   }

@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Contracts } from '@contracts/index';
 import { AUDIO_MEDIA_PROVIDER, AUDIO_MEDIA_TOKEN} from '@audio-media/audio-media.providers';
 import { Observable } from 'rxjs';

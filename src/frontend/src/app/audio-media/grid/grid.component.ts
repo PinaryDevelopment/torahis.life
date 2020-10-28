@@ -14,5 +14,7 @@ export class AudioMediaGridComponent {
 
     faArrowAltCircleDown = faArrowAltCircleDown;
 
-    download(shiur: string): void {}
+    download(shiur: string): void {
+      console.log('download clicked: ', shiur);
+    }
 }

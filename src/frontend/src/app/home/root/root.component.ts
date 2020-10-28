@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Subject, of, timer, Observable } from 'rxjs';
-import { map, distinctUntilChanged, mergeMap, switchMap, tap, shareReplay, debounce } from 'rxjs/operators';
+import { map, distinctUntilChanged, switchMap, tap, shareReplay, debounce } from 'rxjs/operators';
 import { AudioMediaService } from '@audio-media/audio-media.service';
 import { AudioMedia } from '@contracts/app';
 
@@ -18,7 +18,7 @@ export class RootComponent {
   private _searchResults$?: Observable<AudioMedia[]>;
 
   private firstSearch = true;
-  get searchResults$() {
+  get searchResults$(): Observable<AudioMedia[]> {
     if (!this._searchResults$) {
       this._searchResults$ = this.input
                                  .pipe(
@@ -33,7 +33,11 @@ export class RootComponent {
                                    map((input) => input.trim()),
                                    distinctUntilChanged(),
                                    tap(searchInput => this._searchTerm = searchInput),
-                                   switchMap(searchInput => searchInput ? this.audioMediaService.search({ pageIndex: 0, maxPageSize: 10, searchTerm: searchInput }) : of([])),
+                                   switchMap(searchInput =>
+                                    searchInput
+                                      ? this.audioMediaService.search({ pageIndex: 0, maxPageSize: 10, searchTerm: searchInput })
+                                      : of([])
+                                    ),
                                    tap(() => this.searchTerm = this._searchTerm),
                                    shareReplay(1)
                                  );
@@ -56,16 +60,16 @@ export class RootComponent {
     private audioMediaService: AudioMediaService
   ) {}
 
-  onKeyup(event: KeyboardEvent) {
+  onKeyup(event: KeyboardEvent): void{
     const inputElement = event.target as HTMLInputElement;
     this.input.next(inputElement.value);
   }
 
-  onFocus() {
+  onFocus(): void {
     this.showTypeahead = true;
   }
 
-  onBlur() {
+  onBlur(): void {
     this.showTypeahead = false;
   }
 }

@@ -2808,3 +2808,13 @@ export const AUDIO_MEDIA_COLLECTION = raw.shiurim
                                          }));
 
 export const TAG_COLLECTION = raw.tags;
+
+export const USER = {
+  email: 'yolouser@gmail.com',
+  exp: 1603309673,
+  family_name: 'User',
+  given_name: 'Yolo',
+  locale: 'en',
+  name: 'Yolo User',
+  picture: 'https://lh6.googleusercontent.com/-xWz1N-sLLJU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmbikfDC2rxqBvsx7b_WB8IDEvVNA/s96-c/photo.jpg'
+};
