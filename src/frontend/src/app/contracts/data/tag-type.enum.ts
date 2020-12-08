@@ -1,13 +1,7 @@
 export enum TagTypeDto {
-  Unknown = 0,
-  SeriesLevel1 = 1,
-  SeriesLevel2 = 2,
-  SeriesLevel3 = 3
-
-  /*
-  Series -> a.k.a Daf Yomi
-  Sefer -> a.k.a Berachos/Shabbos/Eruvin
-  Metadata -> a.k.a with Rashi
-  Topic -> olam haba, lechi, etc
-   */
+  Unknown     = 0,
+  SeriesTitle = 1, /* e.g. Daf Yomi */
+  SeferTitle  = 2, /* e.g. Berachos/Shabbos/Eruvin */
+  Subtitle    = 3, /* e.g. with Rashi */
+  Metadata    = 4  /* e.g. olam haba, lechi, etc */
 }

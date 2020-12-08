@@ -1,19 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CardComponent } from './card/card.component';
+import { TypeaheadComponent } from './typeahead/typeahead.component';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
-        CardComponent
+        CardComponent,
+        TypeaheadComponent
     ],
     imports: [
         CommonModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        HttpClientModule
     ],
     exports: [
       CardComponent,
-      FontAwesomeModule
+      TypeaheadComponent,
+      FontAwesomeModule,
+      HttpClientModule
     ]
 })
 export class SharedModule {}

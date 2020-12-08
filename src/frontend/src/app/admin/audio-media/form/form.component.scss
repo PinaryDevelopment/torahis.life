@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  input {
+    padding: .5em;
+    border-radius: 5px;
+    border: 1px solid;
+    font-size: 1em;
+  }
+}
+
+fieldset {
+  > div {
+    display: flex;
+    align-items: center;
+    margin: .5em 0;
+    padding: 2px;
+    border-radius: 5px;
+
+    label {
+      padding-inline-end: .5em;
+      width: 8em;
+      text-align: start;
+    }
+
+    input {
+      flex-grow: 1;
+    }
+
+    &.invalid {
+      border: 1px solid red;
+      color: red;
+
+      input {
+        color: red;
+        background-color: lightpink;
+        outline: none;
+        border: none;
+      }
+    }
+  }
+}
+
+button {
+  float: inline-end;
+}

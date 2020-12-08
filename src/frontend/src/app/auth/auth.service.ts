@@ -1,26 +1,17 @@
-import { Injectable, NgZone } from '@angular/core';
+declare const ngDevMode: boolean;
+
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-import * as env from '../../environments/environment';
-
-import { UserProfileService, UserProfile } from '../core/user-profile.service';
-
-declare let gapi: {
-  auth2: {
-    getAuthInstance: () => {
-      signIn: (options: { prompt: 'select_account' }) => Promise<{ getAuthResponse: (b: boolean) => { id_token: string } }>
-    }
-  },
-  client: {
-    init: (options: { clientId: string, scope: string, cookiepolicy: string }) => Promise<unknown>
-  },
-  load: (str: 'client:auth2', callback: () => void) => void
-};
+import { UserProfileService, UserProfile } from '@core/user-profile.service';
+import { Router, UrlTree } from '@angular/router';
+import { catchError, delay, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   isLoggedIn = false;
@@ -30,89 +21,88 @@ export class AuthService {
 
   constructor(
     private httpClient: HttpClient,
-    private ngZone: NgZone,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.user = userProfileService.get();
     this.isLoggedIn = this.user !== null;
   }
 
-  login(): Observable<unknown> {
-    return this.loadGapiScript()
-               .pipe(
-                 switchMap(() => this.loadClient()),
-                 switchMap(() => this.initializeClient()),
-                 switchMap(() => this.oAuthLogin())
-               );
+  requestLogin(currentUrl: string): Observable<boolean> {
+      // TODO: update to call this method. have server create state guid:randomstate(guid for lookup, randomstate for verification)
+      return this.httpClient
+                 .get<string>(`${environment.baseApisUri}/auth/state?redirectUrl=${currentUrl}`)
+                 .pipe(
+                   switchMap(state => {
+                     const params = new URLSearchParams({
+                       scope: 'email profile openid',
+                       access_type: 'offline',
+                       response_type: 'code',
+                       redirect_uri: this.document.location.origin,
+                       client_id: environment.auth.google.clientId,
+                       state
+                     });
+
+                     if (ngDevMode) {
+                       return this.login(currentUrl)
+                                  .pipe(
+                                    map(() => {
+                                      this.router.navigate(['/admin']);
+                                      return true;
+                                    })
+                                  );
+                     }
+
+                     document.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+                     return of(false).pipe(delay(500));
+                   })
+                 );
+      // const params = new URLSearchParams({
+      //   scope: 'email profile openid',
+      //   response_type: 'token',
+      //   redirect_uri: this.document.location.origin,
+      //   client_id: environment.auth.google.clientId
+      // });
+
+      // this.document.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  }
+
+  login(currentUrl: string): Observable<boolean | UrlTree> {
+    /* ?state=fa83a1c1-8b55-4469-b3f2-4009af572351%7Cnull
+       &code=4%2F5gEfTeDBpzh3uqj0wIdWlzxpn2xkP37PBUHpQRvT6KUEU9Iibct_sv6rwNzJof0Zyne92k8_EO4luHI6qxd_lHA
+       &scope=email
+              profile
+              https:%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email
+              https:%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile
+              openid
+       &authuser=0
+       &prompt=consent
+    */
+    const urlTree = this.router.parseUrl(currentUrl);
+
+    return this.httpClient
+                .post<UserProfile>(
+                  `${environment.baseApisUri}/auth/login`,
+                  urlTree.queryParams
+                )
+                .pipe(
+                  map(user => {
+                    this.user = user;
+                    this.userProfileService.set(user);
+                    this.isLoggedIn = true;
+                    return this.isLoggedIn;
+                  }),
+                  catchError(err => {
+                    this.logout();
+                    return throwError(err);
+                  })
+                );
   }
 
   logout(): void {
     this.isLoggedIn = false;
     this.user = null;
     this.userProfileService.clear();
-  }
-
-  private loadGapiScript(): Observable<unknown> {
-    if (typeof document !== 'undefined') {
-      const scriptHasLoaded = new Subject();
-
-      const scriptElement = document.createElement('script');
-      scriptElement.async = true;
-      // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/gapi/index.d.ts
-      // https://github.com/google/google-api-javascript-client
-      scriptElement.src = 'https://apis.google.com/js/client:platform.js?onload=start';
-      scriptElement.onload = () => scriptHasLoaded.next();
-
-      document.head.appendChild(scriptElement);
-      return scriptHasLoaded.asObservable();
-    }
-
-    return throwError('platform is not browser, therefore will not try to load gapi script');
-  }
-
-  private loadClient(): Observable<unknown> {
-    const clientHasLoaded = new Subject();
-    gapi.load('client:auth2', () => clientHasLoaded.next());
-    return clientHasLoaded.asObservable();
-  }
-
-  private initializeClient(): Observable<unknown> {
-    const clientIsInitialized = new Subject();
-    gapi.client
-        .init({
-            clientId: env.environment.auth.google.clientId,
-            scope: 'email profile openid',
-            cookiepolicy: 'single_host_origin'
-        })
-        .then(() => clientIsInitialized.next());
-    return clientIsInitialized.asObservable();
-  }
-
-  private oAuthLogin(): Observable<unknown> {
-    const sub = new Subject<unknown>();
-
-    gapi.auth2
-        .getAuthInstance()
-        .signIn({
-          prompt: 'select_account'
-        })
-        /* currentUser can also be retrieved through gapi.auth2.getAuthInstance().currentUser.get() */
-        .then(currentUser => {
-          const backendToken = currentUser.getAuthResponse(true)
-                                          .id_token;
-          this.httpClient
-              .post<{ user: UserProfile, authorizationToken: string }>(`${env.environment.baseApisUri}/auth/login`, backendToken)
-              .pipe(take(1))
-              .subscribe(({ user, authorizationToken }) =>
-                this.ngZone.run(() => {
-                  this.userProfileService.set(user);
-                  this.user = user;
-                  this.authorizationToken = authorizationToken;
-                  this.isLoggedIn = true; // gapi.auth2.getAuthInstance().isSignedIn.get();
-                  sub.next();
-                }));
-        })
-        .catch((err: unknown) => sub.error(err));
-    return sub.asObservable();
   }
 }

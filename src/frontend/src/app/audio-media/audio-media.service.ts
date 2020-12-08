@@ -65,7 +65,7 @@ export class AudioMediaService {
       id: media.id.toString(),
       versions: [
         {
-          version: tags.find(t => media.tags.find(tag => t.id === tag) && t.type === TagTypeDto.SeriesLevel3)?.tag || '',
+          version: tags.find(t => media.tags.find(tag => t.id === tag) && t.type === TagTypeDto.Subtitle)?.tag || '',
           duration: media.duration,
           shiur: ''
         }
@@ -76,7 +76,7 @@ export class AudioMediaService {
       },
       date: new Date(Date.parse(media.date)),
       title: media.title,
-      series: tags.find(t => media.tags.find(tag => t.id === tag) && t.type === TagTypeDto.SeriesLevel2)?.tag || '',
+      series: tags.find(t => media.tags.find(tag => t.id === tag) && t.type === TagTypeDto.SeferTitle)?.tag || '',
       previousId: media.previousId,
       nextId: media.nextId
     };

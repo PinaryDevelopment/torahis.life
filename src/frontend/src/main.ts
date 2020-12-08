@@ -8,5 +8,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic()
+  /* https://netbasal.com/reduce-change-detection-cycles-with-event-coalescing-in-angular-c4037199859f */
+  .bootstrapModule(AppModule, { ngZoneEventCoalescing: true })
   .catch(err => console.error(err));

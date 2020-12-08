@@ -22,8 +22,8 @@ export class UserProfileService {
   get(): UserProfile | null {
     const userProfileString = this.storageService.get(this.userProfileStorageKey);
 
-    if (userProfileString === null) {
-      return userProfileString;
+    if (userProfileString === 'null' || userProfileString === null) {
+      return null;
     }
 
     const userProfile = JSON.parse(userProfileString) as UserProfile;

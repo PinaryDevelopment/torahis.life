@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { AudioMediaService } from "./audio-media.service";
+import { AudioMediaService } from './audio-media.service';
 import { AudioMedia } from '@contracts/app';
 import { AudioMediaDto, TagDto, TagTypeDto, SearchOptions } from '@contracts/data';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { environment as env } from '../../environments/environment';
 
 describe('AudioMediaService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
   let audioMediaService: AudioMediaService;
-  const subscriptions: Subscription[] = [];
   const audioMediaDto: AudioMediaDto = {
     authorId: 1,
     authorName: 'authorName',
@@ -24,12 +23,12 @@ describe('AudioMediaService', () => {
     {
       id: 1,
       tag: 'tag1',
-      type: TagTypeDto.SeriesLevel2
+      type: TagTypeDto.SeferTitle
     },
     {
       id: 2,
       tag: 'tag2',
-      type: TagTypeDto.SeriesLevel3
+      type: TagTypeDto.Subtitle
     }
   ];
   const audioMediaContract: AudioMedia = {
@@ -64,13 +63,11 @@ describe('AudioMediaService', () => {
           .withArgs(`${env.baseApisUri}/audio-media?pageIndex=0&maxPageSize=25&searchTerm=`)
             .and.returnValue(of([audioMediaDto]));
 
-      subscriptions.push(
-        audioMediaService.search(new SearchOptions())
-                        .subscribe(
-                          audioMedia => expect(audioMedia).toEqual([audioMediaContract], 'expected audio media collection'),
-                          fail
-                        )
-      );
+      audioMediaService.search(new SearchOptions())
+                       .subscribe(
+                         audioMedia => expect(audioMedia).toEqual([audioMediaContract], 'expected audio media collection'),
+                         fail
+                       );
       expect(httpClientSpy.get.calls.count()).toBe(2, 'two calls');
     });
 
@@ -82,13 +79,11 @@ describe('AudioMediaService', () => {
           .withArgs(`${env.baseApisUri}/audio-media?id=${audioMediaContract.id}`)
             .and.returnValue(of(audioMediaDto));
 
-      subscriptions.push(
-        audioMediaService.get(audioMediaContract.id)
+      audioMediaService.get(audioMediaContract.id)
                        .subscribe(
                          audioMedia => expect(audioMedia).toEqual(audioMediaContract, 'expected audio media item'),
                          fail
-                       )
-      );
+                       );
       expect(httpClientSpy.get.calls.count()).toBe(2, 'two calls');
     });
 
@@ -102,18 +97,16 @@ describe('AudioMediaService', () => {
           .withArgs(`${env.baseApisUri}/audio-media?id=${audioMediaContract.id}`)
             .and.returnValue(of(audioMediaDto));
 
-      subscriptions.push(
-        audioMediaService.search(new SearchOptions())
-                        .subscribe(
-                          () => {},
-                          fail
-                        ),
-        audioMediaService.get(audioMediaContract.id)
-                        .subscribe(
-                          () => {},
-                          fail
-                        )
-      );
+      audioMediaService.search(new SearchOptions())
+                       .subscribe(
+                         () => {},
+                         fail
+                       );
+      audioMediaService.get(audioMediaContract.id)
+                       .subscribe(
+                         () => {},
+                         fail
+                       );
       expect(httpClientSpy.get.calls.count()).toBe(2, 'two calls');
     });
 
@@ -128,23 +121,17 @@ describe('AudioMediaService', () => {
           .withArgs(`${env.baseApisUri}/audio-media?id=${newAudioMediaDto.id}`)
             .and.returnValue(of(newAudioMediaDto));
 
-      subscriptions.push(
-        audioMediaService.search(new SearchOptions())
-                        .subscribe(
-                          () => {},
-                          fail
-                        ),
-        audioMediaService.get(newAudioMediaDto.id.toString())
-                        .subscribe(
-                          () => {},
-                          fail
-                        )
-      );
+      audioMediaService.search(new SearchOptions())
+                       .subscribe(
+                         () => {},
+                         fail
+                       );
+      audioMediaService.get(newAudioMediaDto.id.toString())
+                       .subscribe(
+                         () => {},
+                         fail
+                       );
       expect(httpClientSpy.get.calls.count()).toBe(3, 'three calls');
     });
   });
-
-  afterAll(() => {
-    subscriptions.forEach(subscription => subscription.unsubscribe());
-  })
 });

@@ -1,0 +1,77 @@
+import { MasechtaMetadata } from './masechta-metadata';
+
+export const Talmud = {
+  bavli: {
+    masechtos: [
+      new MasechtaMetadata('Zeraim', 'Berachos', 63),
+      new MasechtaMetadata('Zeraim', 'Peah', 0),
+      new MasechtaMetadata('Zeraim', 'Demai', 0),
+      new MasechtaMetadata('Zeraim', 'Kilayim', 0),
+      new MasechtaMetadata('Zeraim', 'Sheviis', 0),
+      new MasechtaMetadata('Zeraim', 'Terumos', 0),
+      new MasechtaMetadata('Zeraim', 'Maaseros', 0),
+      new MasechtaMetadata('Zeraim', 'Maaser Sheni', 0),
+      new MasechtaMetadata('Zeraim', 'Challah', 0),
+      new MasechtaMetadata('Zeraim', 'Orlah', 0),
+      new MasechtaMetadata('Zeraim', 'Bikkurim', 0),
+
+      new MasechtaMetadata('Moed', 'Shabbos', 156),
+      new MasechtaMetadata('Moed', 'Eruvin', 104),
+      new MasechtaMetadata('Moed', 'Pesachim', 120),
+      new MasechtaMetadata('Moed', 'Shekalim', 21),
+      new MasechtaMetadata('Moed', 'Yoma', 87),
+      new MasechtaMetadata('Moed', 'Succah', 55),
+      new MasechtaMetadata('Moed', 'Beitzah', 39),
+      new MasechtaMetadata('Moed', 'Rosh Hashanah', 34),
+      new MasechtaMetadata('Moed', 'Taanis', 30),
+      new MasechtaMetadata('Moed', 'Megilah', 31),
+      new MasechtaMetadata('Moed', 'Moed Katan', 28),
+      new MasechtaMetadata('Moed', 'Chagigah', 26),
+
+      new MasechtaMetadata('Nashim', 'Yevamos', 121),
+      new MasechtaMetadata('Nashim', 'Kesuvos', 111),
+      new MasechtaMetadata('Nashim', 'Nedarim', 90),
+      new MasechtaMetadata('Nashim', 'Nazir', 65),
+      new MasechtaMetadata('Nashim', 'Sotah', 48),
+      new MasechtaMetadata('Nashim', 'Gittin', 89),
+      new MasechtaMetadata('Nashim', 'Kiddushin', 81),
+
+      new MasechtaMetadata('Nezikin', 'Bavah Kamah', 118),
+      new MasechtaMetadata('Nezikin', 'Bavah Metziah', 118),
+      new MasechtaMetadata('Nezikin', 'Bavah Basrah', 175),
+      new MasechtaMetadata('Nezikin', 'Sanhedrin', 112),
+      new MasechtaMetadata('Nezikin', 'Makkos', 23),
+      new MasechtaMetadata('Nezikin', 'Shevuos', 48),
+      new MasechtaMetadata('Nezikin', 'Edios', 0),
+      new MasechtaMetadata('Nezikin', 'Avodah Zarah', 75),
+      new MasechtaMetadata('Nezikin', 'Avos', 0),
+      new MasechtaMetadata('Nezikin', 'Horios', 13),
+
+      new MasechtaMetadata('Kedoshim', 'Zevachim', 119),
+      new MasechtaMetadata('Kedoshim', 'Menachos', 109),
+      new MasechtaMetadata('Kedoshim', 'Chullin', 141),
+      new MasechtaMetadata('Kedoshim', 'Bechoros', 60),
+      new MasechtaMetadata('Kedoshim', 'Arachin', 33),
+      new MasechtaMetadata('Kedoshim', 'Temurah', 33),
+      new MasechtaMetadata('Kedoshim', 'Kerisos', 27),
+      new MasechtaMetadata('Kedoshim', 'Meilah', 21),
+      new MasechtaMetadata('Kedoshim', 'Kinim', 3, 23),
+      new MasechtaMetadata('Kedoshim', 'Tamid', 9, 26),
+      new MasechtaMetadata('Kedoshim', 'Middos', 3, 35),
+
+      new MasechtaMetadata('Tehoros', 'Kailim', 0),
+      new MasechtaMetadata('Tehoros', 'Ohalos', 0),
+      new MasechtaMetadata('Tehoros', 'Negaim', 0),
+      new MasechtaMetadata('Tehoros', 'Parah', 0),
+      new MasechtaMetadata('Tehoros', 'Tehoros', 0),
+      new MasechtaMetadata('Tehoros', 'Mikvaos', 0),
+      new MasechtaMetadata('Tehoros', 'Niddah', 72),
+      new MasechtaMetadata('Tehoros', 'Machshirin', 0),
+      new MasechtaMetadata('Tehoros', 'Zavim', 0),
+      new MasechtaMetadata('Tehoros', 'Tevul Yom', 0),
+      new MasechtaMetadata('Tehoros', 'Yadim', 0),
+      new MasechtaMetadata('Tehoros', 'Uktzim', 0)
+    ],
+    gemaras(): MasechtaMetadata[] { return this.masechtos.filter(m => m.dafim > 0); }
+  }
+};

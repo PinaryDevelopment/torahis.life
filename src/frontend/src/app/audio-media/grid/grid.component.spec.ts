@@ -103,6 +103,12 @@ describe('AudioMediaGridComponent', () => {
           expect(anchor.href.endsWith(`/audio/${audioMedia.id}`)).toBeTrue();
         }
       });
+
+      xit('should update location href for download', () => {
+        component.download('fakeid');
+
+        expect(document?.defaultView?.location.href).toBe('https://torahislife.azurewebsites.net/api/ShiurRetriever?id=fakeid')
+      });
     });
   });
 });

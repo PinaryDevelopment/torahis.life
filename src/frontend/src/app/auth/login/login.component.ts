@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -23,13 +24,9 @@ export class LoginComponent {
     this.message = 'Trying to log in ...';
 
     this.authService
-        .login()
-        .subscribe(() => {
-          this.setMessage();
-          if (this.authService.isLoggedIn) {
-            this.router.navigate([this.authService.redirectUrl]);
-          }
-        });
+        .requestLogin(this.authService.redirectUrl)
+        .pipe(take(1))
+        .subscribe();
   }
 
   logout(): void {

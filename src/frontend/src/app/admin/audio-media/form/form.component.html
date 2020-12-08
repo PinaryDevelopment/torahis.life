@@ -1,0 +1,43 @@
+<form [formGroup]="fg" (ngSubmit)="submitForm()">
+  <fieldset>
+    <legend>Upload a new shiur</legend>
+    <div>
+      <label>Series:</label>
+      <input type="text" [formControlName]="'series'" />
+    </div>
+
+    <div [class.invalid]="fg.get('title')?.invalid">
+      <label>Title:</label>
+      <input type="text" [formControlName]="'title'"required />
+    </div>
+
+    <div>
+      <label>Sefer:</label>
+      <input type="text" [formControlName]="'sefer'" />
+    </div>
+
+    <div>
+      <label>Subtitle:</label>
+      <input type="text" [formControlName]="'subtitle'" />
+    </div>
+
+    <div [class.invalid]="fg.get('author')?.invalid">
+      <label>Author:</label>
+      <input type="text" [formControlName]="'author'"required />
+    </div>
+
+    <div [class.invalid]="fg.get('date')?.invalid">
+      <label>Published On:</label>
+      <input type="date" [formControlName]="'date'" required />
+    </div>
+
+    <div [class.invalid]="fg.get('file')?.invalid">
+      <label>Shiur:</label>
+      <input type="file" accept="audio/*" [formControlName]="'file'" (change)="fileChanged($event)"required  />
+    </div>
+  </fieldset>
+
+
+  <button type="submit" (click)="submitForm()">Submit me</button>
+</form>
+

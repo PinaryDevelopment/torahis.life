@@ -6,8 +6,12 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noImplicitAny": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -22,7 +26,9 @@
     ],
     "paths": {
       "@audio-media/*": ["src/app/audio-media/*"],
+      "@auth/*": ["src/app/auth/*"],
       "@contracts/*": ["src/app/contracts/*"],
+      "@core/*": ["src/app/core/*"],
       "@home/*": ["src/app/home/*"],
       "@testing/*": ["src/testing/*"]
     }

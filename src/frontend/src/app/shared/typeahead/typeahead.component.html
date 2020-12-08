@@ -1,0 +1,16 @@
+<div class="search">
+  <fa-icon [icon]="faSearch"></fa-icon>
+  <input #input type="text" (keyup)="onKeyup($event)" (focus)="onFocus()" (blur)="onBlur()" />
+</div>
+<ng-container *ngIf="showTypeahead">
+  <ng-container *ngIf="searchResults$ | async as results">
+    <ol class="typeahead" *ngIf="results.length">
+      <li *ngFor="let result of results" (click)="onClick(result)">
+        <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: result }"></ng-container>
+      </li>
+    </ol>
+    <div class="typeahead no-results" *ngIf="searchTerm && !results.length">
+      No results matched "{{searchTerm}}".
+    </div>
+  </ng-container>
+</ng-container>

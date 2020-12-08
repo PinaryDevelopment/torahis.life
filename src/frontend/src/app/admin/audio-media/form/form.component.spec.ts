@@ -1,22 +1,22 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { AdminComponent } from './admin.component';
+import { AudioMediaFormComponent } from './form.component';
 
-xdescribe('AdminComponent', () => {
-  let component: AdminComponent;
-  let fixture: ComponentFixture<AdminComponent>;
+xdescribe('AudioMediaFormComponent', () => {
+  let component: AudioMediaFormComponent;
+  let fixture: ComponentFixture<AudioMediaFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminComponent ],
+      declarations: [ AudioMediaFormComponent ],
       imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdminComponent);
+    fixture = TestBed.createComponent(AudioMediaFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

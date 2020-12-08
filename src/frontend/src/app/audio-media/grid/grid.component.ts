@@ -1,4 +1,5 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Contracts } from '@contracts/index';
 
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +15,13 @@ export class AudioMediaGridComponent {
 
     faArrowAltCircleDown = faArrowAltCircleDown;
 
-    download(shiur: string): void {
-      console.log('download clicked: ', shiur);
+    constructor(
+      @Inject(DOCUMENT) private document: Document
+    ) {}
+
+    download(id: string): void {
+      if (this.document?.defaultView) {
+        this.document.defaultView.location.href = `https://torahislife.azurewebsites.net/api/ShiurRetriever?id=${id}`;
+      }
     }
 }
