@@ -60,7 +60,7 @@ describe('AudioMediaService', () => {
         .get
           .withArgs(`${env.baseApisUri}/tags`)
             .and.returnValue(of(tagDtos))
-          .withArgs(`${env.baseApisUri}/audio-media?pageIndex=0&maxPageSize=25&searchTerm=`)
+          .withArgs(`${env.baseApisUri}/audio-media/search?pageIndex=0&maxPageSize=25&searchTerm=`)
             .and.returnValue(of([audioMediaDto]));
 
       audioMediaService.search(new SearchOptions())
@@ -92,7 +92,7 @@ describe('AudioMediaService', () => {
         .get
           .withArgs(`${env.baseApisUri}/tags`)
             .and.returnValue(of(tagDtos))
-          .withArgs(`${env.baseApisUri}/audio-media?pageIndex=0&maxPageSize=25&searchTerm=`)
+          .withArgs(`${env.baseApisUri}/audio-media/search?pageIndex=0&maxPageSize=25&searchTerm=`)
             .and.returnValue(of([audioMediaDto]))
           .withArgs(`${env.baseApisUri}/audio-media?id=${audioMediaContract.id}`)
             .and.returnValue(of(audioMediaDto));
@@ -116,7 +116,7 @@ describe('AudioMediaService', () => {
         .get
           .withArgs(`${env.baseApisUri}/tags`)
             .and.returnValue(of(tagDtos))
-          .withArgs(`${env.baseApisUri}/audio-media?pageIndex=0&maxPageSize=25&searchTerm=`)
+          .withArgs(`${env.baseApisUri}/audio-media/search?pageIndex=0&maxPageSize=25&searchTerm=`)
             .and.returnValue(of([audioMediaDto]))
           .withArgs(`${env.baseApisUri}/audio-media?id=${newAudioMediaDto.id}`)
             .and.returnValue(of(newAudioMediaDto));

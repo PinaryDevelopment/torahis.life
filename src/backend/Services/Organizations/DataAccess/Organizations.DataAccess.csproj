@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>PinaryDevelopment.TorahIsLife.Organizations.DataAccess</AssemblyName>
+    <RootNamespace>PinaryDevelopment.TorahIsLife.Organizations.DataAccess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\DataAccess.Contracts\Organizations.DataAccess.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

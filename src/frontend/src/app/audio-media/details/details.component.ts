@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { Contracts } from '@contracts/index';
+import * as Contracts from '@contracts/app';
 import { AUDIO_MEDIA_PROVIDER, AUDIO_MEDIA_TOKEN} from '@audio-media/audio-media.providers';
 import { Observable } from 'rxjs';
 import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';

@@ -2,6 +2,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DafYomi } from '@contracts/app';
+import { AudioMediaService } from '@audio-media/audio-media.service';
+import { catchError, filter, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { AudioMediaCreateDto } from '@contracts/data';
 
 @Component({
   selector: 'pd-admin-audio-media-form',
@@ -16,28 +19,51 @@ export class AudioMediaFormComponent {
     author: ['Rabbi Yosef Bromberg', Validators.required],
     // https://stackoverflow.com/questions/55660262/how-can-i-set-my-reactive-form-date-input-value#answer-55660482
     date: [formatDate(this.today, 'yyyy-MM-dd', 'en'), Validators.required],
-    file: [Validators.required],
+    file: [undefined, Validators.required],
     title: [`Daf ${DafYomi.getDafByDate(this.today).daf}`, Validators.required],
     sefer: [DafYomi.getDafByDate(this.today).name],
     subtitle: ['with Rashi'],
     series: ['Daf Yomi']
   });
 
-  constructor(private fb: FormBuilder) {
-  }
+  constructor(
+    private fb: FormBuilder,
+    private audioMediaService: AudioMediaService
+  ) {}
 
   submitForm(): void {
     if (!this.file) {
       this.fg.get('file')?.setErrors({ invalid: true });
     }
 
-    console.log(this.fg.valid);
     if (this.fg.valid) {
-      console.log(this.fg.get('title')?.value);
-      console.log(this.fg.get('date')?.value);
-      console.log(this.fg.get('author')?.value);
-      console.log(this.fg.get('file'));
-      console.log(this.file);
+      const audioMedia: AudioMediaCreateDto = {
+        title: this.fg.get('title')?.value,
+        orderInSeries: 0,
+        releasedOn: this.fg.get('date')?.value,
+        authorId: this.fg.get('author')?.value,
+        tagIds: [
+          this.fg.get('sefer')?.value,
+          this.fg.get('subtitle')?.value,
+          this.fg.get('series')?.value,
+        ]
+      };
+
+      const file = this.file;
+      let fileId: string;
+      if (file) {
+        this.audioMediaService
+            .post(audioMedia, this.file)
+            .pipe(
+              tap(result => fileId = result.id),
+              tap(result => console.log(result)),
+              takeWhile(result => result.progress.loadedBytes < file.size),
+              filter(result => result.progress.loadedBytes === file.size),
+              switchMap(({ id }) => this.audioMediaService.fileUploaded(id)),
+              catchError(error => this.audioMediaService.fileUploaded(fileId, error)),
+            )
+            .subscribe();
+      }
     }
   }
 
@@ -45,7 +71,6 @@ export class AudioMediaFormComponent {
   fileChanged(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput && fileInput.files) {
-      this.fg.reset(this.fg.value);
       this.file = fileInput.files[0];
     }
   }

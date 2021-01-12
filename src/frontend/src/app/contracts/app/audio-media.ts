@@ -1,17 +1,19 @@
+import { CSharpTimeSpan } from '../time-span';
+
 export interface AudioMedia {
   id: string;
   series: string;
   title: string;
   versions: {
     version: string,
-    duration: string,
+    duration: CSharpTimeSpan,
     shiur: string
   }[];
   author: {
-    id: number,
+    id: string,
     name: string
   };
   date: Date;
-  nextId?: number;
-  previousId?: number;
+  nextId?: string;
+  previousId?: string;
 }

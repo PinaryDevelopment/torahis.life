@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AUDIO_MEDIA_COLLECTION_PROVIDER, AUDIO_MEDIA_COLLECTION_TOKEN } from '@audio-media/index';
-import { Contracts } from '@contracts/index';
+import * as Contracts from '@contracts/app';
 
 @Component({
   selector: 'pd-index',

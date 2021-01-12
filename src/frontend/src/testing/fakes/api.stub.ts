@@ -35,7 +35,7 @@ export class ApiStub implements HttpInterceptor {
 
   private get(url: string, queryParams: URLSearchParams): Observable<HttpResponse<unknown>> {
     switch (true) {
-      case this.isMatch(url, `${env.baseApisUri}/audio-media?pageIndex={{placeholder}}&maxPageSize={{placeholder}}&searchTerm={{placeholder}}`):
+      case this.isMatch(url, `${env.baseApisUri}/audio-media/search?pageIndex={{placeholder}}&maxPageSize={{placeholder}}&searchTerm={{placeholder}}`):
         const pageIndex = parseInt(queryParams.get('pageIndex') || '0', 10);
         const maxPageSize = parseInt(queryParams.get('maxPageSize') || '25', 10);
         let searchTerm: string | null | undefined = queryParams.get('searchTerm');

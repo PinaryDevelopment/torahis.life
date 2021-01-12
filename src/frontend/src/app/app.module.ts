@@ -2,7 +2,7 @@
 declare const ngDevMode: boolean;
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Provider } from '@angular/core';
+import { APP_INITIALIZER, NgModule, Provider } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { IndexComponent, RootComponent } from './home';
@@ -12,15 +12,23 @@ import { LoginComponent } from './auth/login/login.component';
 
 import { SharedModule } from './shared/shared.module';
 
-import { apiStubProvider } from '@testing/fakes/api.stub';
+// import { apiStubProvider } from '@testing/fakes/api.stub';
 import { NavigationStart, Router } from '@angular/router';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from '@auth/auth.service';
+import { Configuration, ConfigurationService } from './configuration.service';
+
+function initializeConfiguration(configurationService: ConfigurationService): () => Promise<Configuration> {
+  return configurationService.initialize;
+}
 
 const providers: Provider[] = [];
+
 if (ngDevMode) {
-  providers.push(apiStubProvider);
+  // providers.push(apiStubProvider);
 }
+
+providers.push({ provide: APP_INITIALIZER, useFactory: initializeConfiguration, deps: [ConfigurationService], multi: true });
 
 @NgModule({
   declarations: [

@@ -9,7 +9,8 @@ export const environment = {
       clientId: '530120123582-0c6q5c8hrr6g8g15kkji9um4901ck8tn.apps.googleusercontent.com'
     }
   },
-  baseApisUri: 'http://localhost:613/api'
+  baseApisUri: 'http://localhost:7071/api',
+  blobStorageUri: 'http://127.0.0.1:10000/devstoreaccount1/azure-webjobs-hosts'
 };
 
 /*

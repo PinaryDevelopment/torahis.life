@@ -5,5 +5,6 @@ export const environment = {
       clientId: '.apps.googleusercontent.com'
     }
   },
-  baseApisUri: ''
+  baseApisUri: '',
+  blobStorageUri: ''
 };

@@ -1,7 +1,7 @@
 import { InjectionToken, Provider } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Contracts } from '../contracts';
+import * as Contracts from '@contracts/app';
 import { AudioMediaService } from './audio-media.service';
 import { switchMap } from 'rxjs/operators';
 

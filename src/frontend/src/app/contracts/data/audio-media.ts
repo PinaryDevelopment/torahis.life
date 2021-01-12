@@ -1,11 +1,14 @@
+import { CSharpTimeSpan } from '../time-span';
+
 export interface AudioMediaDto {
-  id: number;
+  id: string;
   title: string;
-  tags: number[];
-  date: string;
-  duration: string;
-  previousId?: number;
-  nextId?: number;
-  authorId: number;
-  authorName: string;
+  duration: CSharpTimeSpan;
+  orderInSeries: number;
+  releasedOn: string;
+  authorId: string;
+  organizationId: string;
+  tagIds: string[];
+  previousId?: string;
+  nextId?: string;
 }

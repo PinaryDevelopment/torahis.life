@@ -3,3 +3,4 @@ export * from './author';
 export * from './tag';
 export * from './tag-type.enum';
 export * from './search-options';
+export * from './audio-media-create';

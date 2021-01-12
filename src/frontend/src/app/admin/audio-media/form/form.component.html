@@ -31,13 +31,13 @@
       <input type="date" [formControlName]="'date'" required />
     </div>
 
-    <div [class.invalid]="fg.get('file')?.invalid">
+    <div [class.invalid]="fg.get('file')?.invalid && fg.get('file')?.touched">
       <label>Shiur:</label>
       <input type="file" accept="audio/*" [formControlName]="'file'" (change)="fileChanged($event)"required  />
     </div>
   </fieldset>
 
 
-  <button type="submit" (click)="submitForm()">Submit me</button>
+  <button type="submit">Submit me</button>
 </form>
 

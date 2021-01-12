@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+      <AssemblyName>PinaryDevelopment.TorahIsLife.AudioFiles.DataAccess</AssemblyName>
+    <RootNamespace>PinaryDevelopment.TorahIsLife.AudioFiles.DataAccess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Search.Documents" Version="11.1.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\DataAccess.Contracts\AudioFiles.DataAccess.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

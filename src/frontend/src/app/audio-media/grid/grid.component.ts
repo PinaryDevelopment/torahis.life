@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { Contracts } from '@contracts/index';
+import * as Contracts from '@contracts/app';
 
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 

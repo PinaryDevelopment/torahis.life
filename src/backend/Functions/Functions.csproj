@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+    <AssemblyName>PinaryDevelopment.TorahIsLife.Functions</AssemblyName>
+    <RootNamespace>PinaryDevelopment.TorahIsLife.Functions</RootNamespace>
+    <DockerFastModeProjectMountDirectory>/home/site/wwwroot</DockerFastModeProjectMountDirectory>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Search.Documents" Version="11.1.1" />
+    <PackageReference Include="FFmpeg.Win64.Static" Version="4.1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\DataAccess.Contracts\DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\Core\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\Services\AudioFiles\Contracts\AudioFiles.Contracts.csproj" />
+    <ProjectReference Include="..\Services\AudioFiles\DataAccess.Contracts\AudioFiles.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\Services\AudioFiles\DataAccess\AudioFiles.DataAccess.csproj" />
+    <ProjectReference Include="..\Services\AudioFiles\Services\AudioFiles.Services.csproj" />
+    <ProjectReference Include="..\Services\Organizations\Contracts\Organizations.Contracts.csproj" />
+    <ProjectReference Include="..\Services\Organizations\DataAccess.Contracts\Organizations.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\Services\Organizations\DataAccess\Organizations.DataAccess.csproj" />
+    <ProjectReference Include="..\Services\Organizations\Services\Organizations.Services.csproj" />
+    <ProjectReference Include="..\Services\People\Contracts\People.Contracts.csproj" />
+    <ProjectReference Include="..\Services\People\DataAccess.Contracts\People.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\Services\People\DataAccess\People.DataAccess.csproj" />
+    <ProjectReference Include="..\Services\People\Services\People.Services.csproj" />
+    <ProjectReference Include="..\Services\Tags\Contracts\Tags.Contracts.csproj" />
+    <ProjectReference Include="..\Services\Tags\DataAccess.Contracts\Tags.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\Services\Tags\DataAccess\Tags.DataAccess.csproj" />
+    <ProjectReference Include="..\Services\Tags\Services\Tags.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>

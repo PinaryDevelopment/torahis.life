@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>PinaryDevelopment.TorahIsLife.DataAccess</AssemblyName>
+    <RootNamespace>PinaryDevelopment.TorahIsLife.DataAccess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Search.Documents" Version="11.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Services\AudioFiles\DataAccess.Contracts\AudioFiles.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\..\Services\Organizations\DataAccess.Contracts\Organizations.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\..\Services\People\DataAccess.Contracts\People.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\..\Services\Tags\DataAccess.Contracts\Tags.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\DataAccess.Contracts\DataAccess.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
