@@ -28,7 +28,7 @@ namespace Data
             new MasechtaMetadata("Moed", "Eruvin", 104),
             new MasechtaMetadata("Moed", "Pesachim", 120),
             new MasechtaMetadata("Moed", "Shekalim", 21),
-            new MasechtaMetadata("Moed", "Yomah", 87),
+            new MasechtaMetadata("Moed", "Yoma", 87),
             new MasechtaMetadata("Moed", "Sukkah", 55),
             new MasechtaMetadata("Moed", "Beitzah", 39),
             new MasechtaMetadata("Moed", "Rosh Hashanah", 34),
