@@ -72,7 +72,7 @@ namespace FileUploadListener
             var shiur = data.shiurim.First(s => s.id == id);
             var tags = data.tags.Where(t => shiur.tags.Contains(t.id)).ToArray();
             var author = data.authors.First(a => a.id == shiur.authorId);
-            var fileName = $"dist/{author.name.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel1).tag.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel2).tag.ToLower().Replace(" ", string.Empty)}/{shiur.title} - {tags.First(t => t.type == V2TagType.SeriesLevel3).tag} ({DateTime.ParseExact(shiur.date, "s", null):MMM d yyyy}).mp3";
+            var fileName = $"dist/{author.name.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel1).tag.ToLower().Replace(" ", string.Empty)}/{tags.First(t => t.type == V2TagType.SeriesLevel2).tag.ToLower()/{shiur.title} - {tags.First(t => t.type == V2TagType.SeriesLevel3).tag} ({DateTime.ParseExact(shiur.date, "s", null):MMM d yyyy}).mp3";
             var fileContents = await GetFile(fileName).ConfigureAwait(false);
             
             return new FileContentResult(fileContents, MimeTypeLookupByFileExtension[Path.GetExtension(fileName)]) { FileDownloadName = Path.GetFileName(fileName), EnableRangeProcessing = true };
