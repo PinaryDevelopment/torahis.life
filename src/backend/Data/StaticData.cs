@@ -38,7 +38,7 @@ namespace Data
             new MasechtaMetadata("Moed", "Chagigah", 26),
 
             new MasechtaMetadata("Nashim", "Yevamos", 121),
-            new MasechtaMetadata("Nashim", "Kesuvos", 111),
+            new MasechtaMetadata("Nashim", "Kesubos", 111),
             new MasechtaMetadata("Nashim", "Nedarim", 90),
             new MasechtaMetadata("Nashim", "Nazir", 65),
             new MasechtaMetadata("Nashim", "Sotah", 48),
